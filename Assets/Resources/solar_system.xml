@@ -1,8 +1,8 @@
 <solar_system>
-  <sun name="Sun" mass="1.989e+30" radius="6.96e+8">
+  <planet name="Sun" mass="1.989e+30" radius="6.96e+8">
     <position x="0" y="0" z="0"/>
     <rotation x="0" y="0" z="0"/>
-  </sun>
+  </planet>
   <planet name="Mercury" mass="3.285e+23" radius="2.4397e+6">
     <position x="-5.79e+10" y="0" z="0"/>
     <rotation x="0" y="0" z="0"/>

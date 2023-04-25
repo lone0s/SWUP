@@ -8,17 +8,11 @@ using System.Xml;
 public class Element_script : MonoBehaviour
 {
     public GameObject prefab;
-    [SerializeField] private UnityEngine.Object file;
 
 
     void Start()
     {
-        if (file != null)
-        {
-            string path = AssetDatabase.GetAssetPath(file);
-            InitElementPanel(path); 
-        }
-        
+        InitElementPanel(); 
     }
 
     void Update()
@@ -26,29 +20,23 @@ public class Element_script : MonoBehaviour
         
     }
 
-    public void InitElementPanel(string path){
-        XmlDocument xmlDoc = new XmlDocument();
-        xmlDoc.Load(path);
+    public void InitElementPanel(){
 
-        XmlElement root = xmlDoc.DocumentElement;
+        Main_script scriptParent = GetComponentInParent<Main_script>();
+        Dictionary<string, Planet> d = scriptParent.planets;
 
-        foreach (XmlNode node in root.ChildNodes)
+        foreach (KeyValuePair<string, Planet> planet in d)
         {
-            string name = node.Attributes["name"].Value;
-            AddElement(name);
-        }   
+            AddElement(planet.Key);
+        }
     }
 
     public void AddElement(string name){
         GameObject element = Instantiate(prefab, transform.position, Quaternion.identity);
 
-        
-        // Met à jour le texte du bouton
         Text elementText = element.GetComponentInChildren<Text>();
-        Debug.Log(elementText);
         elementText.text = name;
-        Debug.Log(elementText.text);
-        // Ajoute le nouvel objet à la hiérarchie en tant qu'enfant de l'objet courant
+
         element.transform.parent = transform;
     }
 }
