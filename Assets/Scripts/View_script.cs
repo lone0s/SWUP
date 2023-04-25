@@ -32,6 +32,7 @@ public class View_script : MonoBehaviour
     // Update is called once per frame
     void Update()
     {
+        
     }
 
     public void AddPrefab(string name){
