@@ -9,16 +9,7 @@ public class View_script : MonoBehaviour
     // Start is called before the first frame update
     void Start()
     {
-        AddPrefab("Onglet");
-        AddPrefab("Onglet");
-        AddPrefab("Onglet");
-        AddPrefab("Onglet");
-        AddPrefab("Onglet");
-        AddPrefab("Onglet");
-        AddPrefab("Onglet");
-        AddPrefab("Onglet");
-        AddPrefab("Onglet");
-        AddPrefab("Onglet");
+        AddPrefab("System Solaire");
     }
 
     // Update is called once per frame
