@@ -6,9 +6,12 @@ using UnityEngine.UI;
 public class AddPrefab_script : MonoBehaviour
 {
     public GameObject prefab;
+    public GameObject cam;
+    private Camera_script camScript;
     // Start is called before the first frame update
     void Start()
     {
+        camScript = cam.GetComponent<Camera_script>();
     }
 
     // Update is called once per frame
@@ -25,6 +28,7 @@ public class AddPrefab_script : MonoBehaviour
         // On rattache la planet crée au script du prefab
         Onglet_script OngletScript = newOnglet.GetComponent<Onglet_script>();
         OngletScript.SetPlanet(planet);
+        OngletScript.SetCamScript(camScript);
 
         // Met à jour le texte du bouton
         Text buttonText = newOnglet.GetComponentInChildren<Text>();

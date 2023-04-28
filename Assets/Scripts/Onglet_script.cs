@@ -1,20 +1,33 @@
+using System;
 using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
 using UnityEngine.UI;
 using UnityEngine.EventSystems;
-using System;
 
 public class Onglet_script : MonoBehaviour
 {
+    private Button mainButton;
     private Button deleteButton;
     private GameObject planet;
+    private Camera_script camScript;
 
     // Start is called before the first frame update
     void Start()
     {
+        // Récupérer la référence au bouton
+        mainButton = GetComponent<Button>();
+
+        // Ajouter la méthode onClick au bouton
+        mainButton.onClick.AddListener(MyOnClickMethod);
+
         deleteButton = this.transform.Find("Close_btn").GetComponent<Button>();
         deleteButton.onClick.AddListener(() => { if(planet)Destroy(planet); Destroy(gameObject); });
+    }
+
+    private void MyOnClickMethod()
+    {
+        camScript.MoveToTarget(planet.GetComponent<Planet_script>().GetPosCam());
     }
 
     // Update is called once per frame
@@ -26,5 +39,10 @@ public class Onglet_script : MonoBehaviour
     internal void SetPlanet(GameObject obj)
     {
         this.planet = obj;
+    }
+
+    internal void SetCamScript(Camera_script script)
+    {
+        this.camScript = script;
     }
 }

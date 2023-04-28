@@ -38,6 +38,10 @@ public class Add_script : MonoBehaviour
         sphere.transform.position = spherePosition;
         sphere.transform.localScale = new Vector3(sphereSize, sphereSize, sphereSize);
 
+        sphere.AddComponent<Planet_script>();
+        Planet_script planet_Script = sphere.GetComponent<Planet_script>();
+        planet_Script.SetPosCam(sphere.transform);
+
         // Applique la couleur spécifiée au matériau de la sphère
         Renderer renderer = sphere.GetComponent<Renderer>();
         if (renderer != null)
