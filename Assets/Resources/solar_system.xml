@@ -13,6 +13,7 @@
     <rotation x="0" y="0" z="0"/>
     <orbit semimajoraxis="1.082e+11" eccentricity="0.0068" inclination="3.3947" period="224.701" />
     <planet name="Moon Venus" mass="4.867e+24" radius="6.0518e+6"><!-- TODO --></planet>
+    <planet name="Moon Venus222" mass="4.867e+24" radius="6.0518e+6"><!-- TODO --></planet>
   </planet>
   <planet name="Earth" mass="5.972e+24" radius="6.371e+6">
     <position x="-1.496e+11" y="0" z="0"/>

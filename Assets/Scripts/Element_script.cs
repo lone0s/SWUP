@@ -4,6 +4,7 @@ using UnityEngine;
 using UnityEngine.UI;
 using UnityEditor;
 using System.Xml;
+using UnityEngine.EventSystems;
 
 public class Element_script : MonoBehaviour
 {
@@ -36,21 +37,29 @@ public class Element_script : MonoBehaviour
         if(p.satellite.Count > 0){
             Dropdown dropdown = Instantiate(dropdownPrefab, transform.position, Quaternion.identity);
             List<string> options = new List<string>();
-            options.Add(p.name);
+            options.Add("");
             foreach(KeyValuePair<string, Planet> s in p.satellite){
                 options.Add(s.Key);
             }   
             dropdown.ClearOptions();
             dropdown.AddOptions(options);
+
+            dropdown.GetComponentInChildren<Text>().text = p.name;
+
+            //Dropdown dropdownComponent = dropdown.GetComponent<Dropdown>();
+
+            // Add an event listener to the Dropdown's onValueChanged event
+            dropdown.onValueChanged.AddListener(delegate { Debug.Log("aaa");OnDropdownValueChanged(dropdown); });
+
+            dropdown.value = -1;
+
+            //dropdown.RefreshShownValue();
+
+            Dropdown_element_script script = dropdown.GetComponentInChildren<Dropdown_element_script>();
+            script.planet = p;
+
+            dropdown.GetComponent<Image>().GetComponentInChildren<Button>().onClick.AddListener(() => OnClick(p));
             dropdown.transform.parent = transform;
-
-            Text t = dropdown.GetComponent<Text>();
-            t.text = "aaaa";
-            Debug.Log(dropdown.GetComponent<Toggle>());
-
-            //dropdown.onValueChanged.AddListener((index) => OnDropdownValueChanged(p,dropdown));
-
-            //dropdown.GetComponent<Image>().GetComponentInChildren<Button>().onClick.AddListener(() => OnClick(p));
         }else{
             GameObject element = Instantiate(elementPrefab, transform.position, Quaternion.identity);
 
@@ -62,12 +71,33 @@ public class Element_script : MonoBehaviour
         
     }
 
+    void OnDropdownValueChanged(Dropdown changedDropdown)
+{
+    Debug.Log("aa");
+}
+
+    private void OnOptionSelected(Dropdown.OptionData option)
+    {
+        Debug.Log("Option selected: " + option.text);
+    }
+
+    void OnClick(){
+        Debug.Log("aa");
+    }
+
+    void OnDropdownValueChanged(int index)
+    {
+        Debug.Log("clicked 2222");
+    }
+
     void OnDropdownValueChanged(Planet p, Dropdown dropdown)
     {
+        Debug.Log("clicked 2222");
         dropdown.value = 0;
     }
 
     void OnClick(Planet p)
     {
+        Debug.Log("clicked");
     }
 }

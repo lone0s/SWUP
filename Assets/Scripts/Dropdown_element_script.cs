@@ -3,23 +3,30 @@ using System.Collections.Generic;
 using UnityEngine;
 using UnityEngine.UI;
 
+
 public class Dropdown_element_script : MonoBehaviour
 {
-    public Dropdown dropdown;
-
-    void Start()
-    {
-        dropdown.onValueChanged.AddListener(OnDropdownValueChanged);
-    }
+    public Planet planet;
 
     void Update()
     {
         
     }
 
-    void OnDropdownValueChanged(int index)
+    void Start()
     {
-        dropdown.value = 0;
+        Dropdown myGameObject = GetComponent<Dropdown>();;
+
+        // Do something with the GameObject
+        Debug.Log(myGameObject);
+
+        myGameObject.onValueChanged.AddListener(OnDropdownValueChanged);
+    }
+
+    public void OnDropdownValueChanged(int index)
+    {
+        Debug.Log("Selected index: " + index);
+        Debug.Log(planet);
     }
 
     
