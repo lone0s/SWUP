@@ -37,47 +37,57 @@ public class Main_script : MonoBehaviour
 
         foreach (XmlNode planet in root.ChildNodes)
         {
-            Planet p = new Planet();
-            p.name = planet.Attributes["name"].Value;
-            p.mass = StringToFloat(planet.Attributes["mass"].Value);
-            p.radius = StringToFloat(planet.Attributes["radius"].Value);
-
-            foreach (XmlNode attr in planet.ChildNodes)
-            {
-                float x;
-                float y;
-                float z;
-                switch (attr.NodeType.ToString())
-                {
-                    
-                    case "position":
-                        x = StringToFloat(attr.Attributes["x"].Value);
-                        y = StringToFloat(attr.Attributes["y"].Value);
-                        z = StringToFloat(attr.Attributes["z"].Value);
-                        p.position = new Vector3(x, y, z);
-                        break;
-                    case "rotation":
-                        x = StringToFloat(attr.Attributes["x"].Value);
-                        y = StringToFloat(attr.Attributes["y"].Value);
-                        z = StringToFloat(attr.Attributes["z"].Value);
-                        p.rotation = new Vector3(x, y, z);
-                        break;
-                    case "orbit":
-                        Orbit o = new Orbit();
-                        o.semimajoraxis = StringToFloat(attr.Attributes["semimajoraxis"].Value);
-                        o.eccentricity = StringToFloat(attr.Attributes["eccentricity"].Value);
-                        o.inclination = StringToFloat(attr.Attributes["inclination"].Value);
-                        o.period = StringToFloat(attr.Attributes["period"].Value);
-                        p.orbit = o;
-                        break;
-                    default:
-                        break;
-                }
-            }
-
+            
+            Planet p = getPlanet(planet);
             
             this.planets.Add(p.name, p);
         }
+    }
+
+    private Planet getPlanet(XmlNode planet){
+        Planet p = new Planet();
+        p.name = planet.Attributes["name"].Value;
+        p.mass = StringToFloat(planet.Attributes["mass"].Value);
+        p.radius = StringToFloat(planet.Attributes["radius"].Value);
+        p.satellite = new Dictionary<string, Planet>();
+
+        foreach (XmlNode attr in planet.ChildNodes)
+        {
+            float x;
+            float y;
+            float z;
+            switch (attr.Name)
+            {
+                case "position":
+                    p.position = getVector(attr);
+                    break;
+                case "rotation":
+                    p.rotation = getVector(attr);
+                    break;
+                case "planet":
+                    Planet s = getPlanet(attr);
+                    p.satellite.Add(s.name,s);
+                    break;
+                case "orbit":
+                    Orbit o = new Orbit();
+                    o.semimajoraxis = StringToFloat(attr.Attributes["semimajoraxis"].Value);
+                    o.eccentricity = StringToFloat(attr.Attributes["eccentricity"].Value);
+                    o.inclination = StringToFloat(attr.Attributes["inclination"].Value);
+                    o.period = StringToFloat(attr.Attributes["period"].Value);
+                    p.orbit = o;
+                    break;
+                default:
+                    break;
+            }
+        }
+        return p;
+    }
+
+    private Vector3 getVector(XmlNode attr){
+        float x = StringToFloat(attr.Attributes["x"].Value);
+        float y = StringToFloat(attr.Attributes["y"].Value);
+        float z = StringToFloat(attr.Attributes["z"].Value);
+        return new Vector3(x, y, z);
     }
 
     private float StringToFloat(string s){
@@ -93,6 +103,7 @@ public class Planet
     public Vector3 position;
     public Vector3 rotation;
     public Orbit orbit;
+    public Dictionary<string, Planet> satellite;
 }
 
 public class Orbit
