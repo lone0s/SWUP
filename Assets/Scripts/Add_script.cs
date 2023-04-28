@@ -7,18 +7,21 @@ public class Add_script : MonoBehaviour
 {
     public GameObject parent;
     private View_script script;
-    private Button button;
-    private float sphereSize = 1f;
-    private string sphereName = "Planète";
-    private Vector3 spherePosition = Vector3.zero;
-    private Quaternion sphereRotation = Quaternion.identity;
-    private Color sphereColor = Color.white;
+    private Button addButton;
+
+    //Parametre Planet
+    public string sphereName = "Planète";
+    //taille, position, vitesse rotation
+    public float sphereSize = 1f;
+    public Vector3 spherePosition = Vector3.zero;
+    public float sphereSpeed = 1;
+    public Color sphereColor = Color.white;
 
     // Start is called before the first frame update
     void Start()
     {
-        button = GetComponent<Button>();
-        button.onClick.AddListener(() => CreatePlanet());
+        addButton = GetComponent<Button>();
+        addButton.onClick.AddListener(() => CreatePlanet());
         script = parent.GetComponent<View_script>();
     }
 
@@ -33,7 +36,6 @@ public class Add_script : MonoBehaviour
         GameObject sphere = GameObject.CreatePrimitive(PrimitiveType.Sphere);
         sphere.name = sphereName;
         sphere.transform.position = spherePosition;
-        sphere.transform.rotation = sphereRotation;
         sphere.transform.localScale = new Vector3(sphereSize, sphereSize, sphereSize);
 
         // Applique la couleur spécifiée au matériau de la sphère
@@ -47,6 +49,6 @@ public class Add_script : MonoBehaviour
             }
         }
 
-        script.AddPrefab(sphereName);
+        script.AddPrefab(sphereName, sphere);
     }
 }

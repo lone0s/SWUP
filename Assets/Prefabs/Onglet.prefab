@@ -16,7 +16,7 @@ GameObject:
   - component: {fileID: 1603186282476105237}
   - component: {fileID: 6915084351003554478}
   m_Layer: 5
-  m_Name: Global_btn
+  m_Name: Onglet
   m_TagString: Untagged
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0

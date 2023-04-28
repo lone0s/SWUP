@@ -17,17 +17,20 @@ public class View_script : MonoBehaviour
         
     }
 
-    public void AddPrefab(string name){
+    public void AddPrefab(string name, GameObject planet){
        
         // Instancie le prefab à la position de l'objet courant
-        GameObject newButton = Instantiate(prefab, transform.position, Quaternion.identity);
+        GameObject newOnglet = Instantiate(prefab, transform.position, Quaternion.identity);
 
-        
+        // On rattache la planet crée au script du prefab
+        View_btn OngletScript = newOnglet.GetComponent<View_btn>();
+        OngletScript.SetPlanet(planet);
+
         // Met à jour le texte du bouton
-        Text buttonText = newButton.GetComponentInChildren<Text>();
+        Text buttonText = newOnglet.GetComponentInChildren<Text>();
         buttonText.text = name;
         
         // Ajoute le nouvel objet à la hiérarchie en tant qu'enfant de l'objet courant
-        newButton.transform.parent = transform;
+        newOnglet.transform.parent = transform;
     }
 }
