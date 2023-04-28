@@ -5,16 +5,16 @@ using UnityEngine.UI;
 using UnityEngine.EventSystems;
 using System;
 
-public class View_btn : MonoBehaviour
+public class Onglet_script : MonoBehaviour
 {
     private Button deleteButton;
-    public GameObject planet;
+    private GameObject planet;
 
     // Start is called before the first frame update
     void Start()
     {
         deleteButton = this.transform.Find("Close_btn").GetComponent<Button>();
-        deleteButton.onClick.AddListener(() => { Destroy(planet); Destroy(gameObject); });
+        deleteButton.onClick.AddListener(() => { if(planet)Destroy(planet); Destroy(gameObject); });
     }
 
     // Update is called once per frame

@@ -6,7 +6,7 @@ using UnityEngine.UI;
 public class Add_script : MonoBehaviour
 {
     public GameObject parent;
-    private View_script script;
+    private AddPrefab_script script;
     private Button addButton;
 
     //Parametre Planet
@@ -22,7 +22,7 @@ public class Add_script : MonoBehaviour
     {
         addButton = GetComponent<Button>();
         addButton.onClick.AddListener(() => CreatePlanet());
-        script = parent.GetComponent<View_script>();
+        script = parent.GetComponent<AddPrefab_script>();
     }
 
     // Update is called once per frame

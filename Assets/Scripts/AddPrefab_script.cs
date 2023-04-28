@@ -3,7 +3,7 @@ using System.Collections.Generic;
 using UnityEngine;
 using UnityEngine.UI;
 
-public class View_script : MonoBehaviour
+public class AddPrefab_script : MonoBehaviour
 {
     public GameObject prefab;
     // Start is called before the first frame update
@@ -23,7 +23,7 @@ public class View_script : MonoBehaviour
         GameObject newOnglet = Instantiate(prefab, transform.position, Quaternion.identity);
 
         // On rattache la planet crée au script du prefab
-        View_btn OngletScript = newOnglet.GetComponent<View_btn>();
+        Onglet_script OngletScript = newOnglet.GetComponent<Onglet_script>();
         OngletScript.SetPlanet(planet);
 
         // Met à jour le texte du bouton
