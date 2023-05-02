@@ -9,6 +9,7 @@ using System.Xml.Serialization;
 
 public class Main_script : MonoBehaviour
 {
+    [SerializeField] private GameObject planet;
     [SerializeField] private UnityEngine.Object xmlFile;
     public Dictionary<string, Planet> planets;
 
@@ -19,12 +20,34 @@ public class Main_script : MonoBehaviour
             string path = AssetDatabase.GetAssetPath(xmlFile);
             InitObjects(path);
         }
-        
+
+        foreach (KeyValuePair<string, Planet> planet in planets)
+        {
+            AddPlanet(planet.Value);
+        }
     }
 
     void Update()
     {
         
+    }
+
+
+    public void AddPlanet(Planet p){
+        GameObject sphere = GameObject.CreatePrimitive(PrimitiveType.Sphere);
+        sphere.name = p.name;
+        sphere.transform.position = p.position;
+        sphere.transform.localScale = new Vector3(p.radius, p.radius, p.radius);
+
+        sphere.AddComponent<Planet_script>();
+
+        Renderer renderer = sphere.GetComponent<Renderer>();
+        if (renderer != null)
+        {
+            Debug.Log(Resources.Load<Material>("Materials/" + p.name.ToLower()));
+            renderer.material = Resources.Load<Material>("Materials/" + p.name.ToLower());
+        }
+
     }
 
     private void InitObjects(string path){
@@ -47,22 +70,15 @@ public class Main_script : MonoBehaviour
     private Planet getPlanet(XmlNode planet){
         Planet p = new Planet();
         p.name = planet.Attributes["name"].Value;
-        p.mass = StringToFloat(planet.Attributes["mass"].Value);
         p.radius = StringToFloat(planet.Attributes["radius"].Value);
         p.satellite = new Dictionary<string, Planet>();
 
         foreach (XmlNode attr in planet.ChildNodes)
         {
-            float x;
-            float y;
-            float z;
             switch (attr.Name)
             {
                 case "position":
                     p.position = getVector(attr);
-                    break;
-                case "rotation":
-                    p.rotation = getVector(attr);
                     break;
                 case "planet":
                     Planet s = getPlanet(attr);
@@ -98,10 +114,8 @@ public class Main_script : MonoBehaviour
 public class Planet
 {
     public string name;
-    public float mass;
     public float radius;
     public Vector3 position;
-    public Vector3 rotation;
     public Orbit orbit;
     public Dictionary<string, Planet> satellite;
 }

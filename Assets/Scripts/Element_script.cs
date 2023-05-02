@@ -43,7 +43,6 @@ public class Element_script : MonoBehaviour
 
             // Find the item background object
             Button item = template.Find("Viewport/Content/Item/Item Label").GetComponent<Button>();
-            Debug.Log(item);
             item.onClick.AddListener(() => OnClick(p));
 
             List<string> options = new List<string>();

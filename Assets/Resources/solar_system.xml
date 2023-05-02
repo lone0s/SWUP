@@ -1,50 +1,33 @@
 <solar_system>
-  <planet name="Soleil" mass="1.989e+30" radius="6.96e+8">
-    <position x="0" y="0" z="0"/>
-    <rotation x="0" y="0" z="0"/>
-  </planet>
-  <planet name="Mercure" mass="3.285e+23" radius="2.4397e+6">
-    <position x="-5.79e+10" y="0" z="0"/>
-    <rotation x="0" y="0" z="0"/>
-    <orbit semimajoraxis="5.79e+10" eccentricity="0.2056" inclination="7.005" period="87.969" />
-  </planet>
-  <planet name="Venus" mass="4.867e+24" radius="6.0518e+6">
-    <position x="-1.082e+11" y="0" z="0"/>
-    <rotation x="0" y="0" z="0"/>
-    <orbit semimajoraxis="1.082e+11" eccentricity="0.0068" inclination="3.3947" period="224.701" />
-    <planet name="Moon Venus" mass="4.867e+24" radius="6.0518e+6"><!-- TODO --></planet>
-    <planet name="Moon Venus222" mass="4.867e+24" radius="6.0518e+6"><!-- TODO --></planet>
-  </planet>
-  <planet name="Terre" mass="5.972e+24" radius="6.371e+6">
-    <position x="-1.496e+11" y="0" z="0"/>
-    <rotation x="0" y="0" z="0"/>
-    <orbit semimajoraxis="1.496e+11" eccentricity="0.0167" inclination="0" period="365.256" />
-    <planet name="Moon" mass="4.867e+24" radius="6.0518e+6"><!-- TODO --></planet>
-  </planet>
-  <planet name="Mars" mass="6.39e+23" radius="3.3895e+6">
-    <position x="-2.279e+11" y="0" z="0"/>
-    <rotation x="0" y="0" z="0"/>
-    <orbit semimajoraxis="2.279e+11" eccentricity="0.0934" inclination="1.850" period="686.971" />
-  </planet>
-  <planet name="Jupiter" mass="1.898e+27" radius="6.9911e+7">
-    <position x="-7.783e+11" y="0" z="0"/>
-    <rotation x="0" y="0" z="0"/>
-    <orbit semimajoraxis="7.783e+11" eccentricity="0.0483" inclination="1.303" period="4332.59" />
-  </planet>
-  <planet name="Saturne" mass="5.683e+26" radius="5.8232e+7">
-    <position x="-1.429e+12" y="0" z="0"/>
-    <rotation x="0" y="0" z="0"/>
-    <orbit semimajoraxis="1.429e+12" eccentricity="0.0560" inclination="2.485" period="10759.22" />
-  </planet>
-  <planet name="Uranus" mass="8.681e+25" radius="2.5362e+7">
-    <position x="-2.871e+12" y="0" z="0"/>
-    <rotation x="0" y="0" z="0"/>
-    <orbit semimajoraxis="2.871e+12" eccentricity="0.0457" inclination="0.772" period="30685.4" />
-  </planet>
-  <planet name="Neptune" mass="1.024e+26" radius="2.4622e+7">
-    <position x="-4.498e+12" y="0" z="0"/>
-    <rotation x="0" y="0" z="0"/>
-    <orbit semimajoraxis="4.498e+12" eccentricity="0.0113" inclination="1.769" period="60189.0" />
-  </planet>
+<planet name="Soleil" radius="1.75">
+<position x="0" y="0" z="0"/>
+</planet>
+<planet name="Mercure" radius="0.25" period="87.969">
+<position x="1.5" y="0" z="0"/>
+</planet>
+<planet name="Venus" radius="0.25" period="224.701">
+<position x="2.5" y="0" z="0"/>
+<planet name="Moon Venus" radius="0.0173954"><!-- TODO --></planet>
+<planet name="Moon Venus222" radius="0.0173954"><!-- TODO --></planet>
+</planet>
+<planet name="Terre" radius="0.25" period="365.256">
+<position x="3.5" y="0" z="0"/>
+<planet name="Moon" radius="0.0086977"><!-- TODO --></planet>
+</planet>
+<planet name="Mars" radius="0.25" period="686.971">
+<position x="4.5" y="0" z="0"/>
+</planet>
+<planet name="Jupiter" radius="0.75" period="4332.59">
+<position x="5.5" y="0" z="0"/>
+</planet>
+<planet name="Saturne" radius="0.75" period="10759.22">
+<position x="6.5" y="0" z="0"/>
+</planet>
+<planet name="Uranus" radius="0.5" period="30685.4">
+<position x="7.5" y="0" z="0"/>
+</planet>
+<planet name="Neptune" radius="0.5" period="60189.0">
+<position x="8.5" y="0" z="0"/>
+</planet>
 </solar_system>
 
