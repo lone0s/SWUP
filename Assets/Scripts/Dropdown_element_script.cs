@@ -7,27 +7,20 @@ using UnityEngine.UI;
 public class Dropdown_element_script : MonoBehaviour
 {
     public Planet planet;
+    private Element_script script;
+
+    void Start()
+    {
+        this.script = GetComponentInParent<Element_script>();
+    }
+
+    public void OnClickItem()
+    {
+        this.script.OnClick(planet);
+    }
 
     void Update()
     {
         
     }
-
-    void Start()
-    {
-        Dropdown myGameObject = GetComponent<Dropdown>();;
-
-        // Do something with the GameObject
-        Debug.Log(myGameObject);
-
-        myGameObject.onValueChanged.AddListener(OnDropdownValueChanged);
-    }
-
-    public void OnDropdownValueChanged(int index)
-    {
-        Debug.Log("Selected index: " + index);
-        Debug.Log(planet);
-    }
-
-    
 }

@@ -8,8 +8,9 @@ using UnityEngine.EventSystems;
 
 public class Element_script : MonoBehaviour
 {
-    public GameObject elementPrefab;
+    public Button elementPrefab;
     public Dropdown dropdownPrefab;
+    public Camera camera;
 
 
     void Start()
@@ -36,8 +37,16 @@ public class Element_script : MonoBehaviour
     public void AddElement(Planet p){
         if(p.satellite.Count > 0){
             Dropdown dropdown = Instantiate(dropdownPrefab, transform.position, Quaternion.identity);
+
+
+            Transform template = dropdown.template;
+
+            // Find the item background object
+            Button item = template.Find("Viewport/Content/Item/Item Label").GetComponent<Button>();
+            Debug.Log(item);
+            item.onClick.AddListener(() => OnClick(p));
+
             List<string> options = new List<string>();
-            options.Add("");
             foreach(KeyValuePair<string, Planet> s in p.satellite){
                 options.Add(s.Key);
             }   
@@ -46,22 +55,15 @@ public class Element_script : MonoBehaviour
 
             dropdown.GetComponentInChildren<Text>().text = p.name;
 
-            //Dropdown dropdownComponent = dropdown.GetComponent<Dropdown>();
-
-            // Add an event listener to the Dropdown's onValueChanged event
-            dropdown.onValueChanged.AddListener(delegate { Debug.Log("aaa");OnDropdownValueChanged(dropdown); });
-
-            dropdown.value = -1;
-
-            //dropdown.RefreshShownValue();
-
             Dropdown_element_script script = dropdown.GetComponentInChildren<Dropdown_element_script>();
             script.planet = p;
 
             dropdown.GetComponent<Image>().GetComponentInChildren<Button>().onClick.AddListener(() => OnClick(p));
             dropdown.transform.parent = transform;
         }else{
-            GameObject element = Instantiate(elementPrefab, transform.position, Quaternion.identity);
+            Button element = Instantiate(elementPrefab, transform.position, Quaternion.identity);
+
+            element.onClick.AddListener(() => OnClick(p));
 
             Text elementText = element.GetComponentInChildren<Text>();
             elementText.text = p.name;
@@ -71,33 +73,12 @@ public class Element_script : MonoBehaviour
         
     }
 
-    void OnDropdownValueChanged(Dropdown changedDropdown)
-{
-    Debug.Log("aa");
-}
-
-    private void OnOptionSelected(Dropdown.OptionData option)
+    public void OnClick(Planet p)
     {
-        Debug.Log("Option selected: " + option.text);
-    }
-
-    void OnClick(){
-        Debug.Log("aa");
-    }
-
-    void OnDropdownValueChanged(int index)
-    {
-        Debug.Log("clicked 2222");
-    }
-
-    void OnDropdownValueChanged(Planet p, Dropdown dropdown)
-    {
-        Debug.Log("clicked 2222");
-        dropdown.value = 0;
-    }
-
-    void OnClick(Planet p)
-    {
-        Debug.Log("clicked");
+        GameObject planetObj = GameObject.Find(p.name);
+        Planet_script pScript = planetObj.GetComponent<Planet_script>();
+        Vector3 posCam = pScript.GetPosCam();
+        Camera_script script = camera.GetComponent<Camera_script>();
+        script.MoveToTarget(posCam);
     }
 }
