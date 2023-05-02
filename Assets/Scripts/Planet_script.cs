@@ -25,7 +25,7 @@ public class Planet_script : MonoBehaviour
     internal void SetPosCam(Transform target)
     {
         posCam = target.position;
-        posCam.y = target.position.y + distance;
+        posCam.z = target.position.z + distance;
     }
 
     internal Vector3 GetPosCam()

@@ -7,14 +7,13 @@ public class Camera_script : MonoBehaviour
 {
     private float transition = 5.0f;  // la durée de la transition en secondes
     private bool isMove = false;
-    public float x = 0;
-    public float y = 0;
-    public float z = 0;
+    private Vector3 initPos;
+    private int move;
 
     // Start is called before the first frame update
     void Start()
     {
-        
+        initPos = transform.position;
     }
 
     // Update is called once per frame
@@ -26,8 +25,7 @@ public class Camera_script : MonoBehaviour
     public void Reset()
     {
         isMove = false; // je dis d'arrêter le mouvement
-        Vector3 position = new Vector3 (x, y, z);
-        transform.position = position;
+        transform.position = initPos;
     }
 
     public void SetTransition(float newTime)
@@ -35,10 +33,24 @@ public class Camera_script : MonoBehaviour
         this.transition = newTime;
     }
 
+    public void SetMove(int value)
+    {
+        this.move = value;
+    }
+
     public void MoveToTarget(Vector3 target)
     {
-        //MoveToTargetCoroutine(target);
-        StartCoroutine(ZoomMoveToTargetCoroutine(target));
+        switch (move)
+        {
+            case 0:
+                StartCoroutine(MoveToTargetCoroutine(target));
+                break;
+            case 1:
+                StartCoroutine(ZoomMoveToTargetCoroutine(target));
+                break;
+            default:
+                break;
+        }        
     }
 
     private IEnumerator MoveToTargetCoroutine(Vector3 target)
@@ -46,6 +58,7 @@ public class Camera_script : MonoBehaviour
         if (isMove)// si la fonction est déjà appelé
         {
             isMove = false; // je dis à l'autre d'arrêté
+            yield return null;  //j'attend le prochain frame
         }
 
         isMove = true;  // je dis que je commence
@@ -79,13 +92,14 @@ public class Camera_script : MonoBehaviour
         if (isMove)// si la fonction est déjà appelé
         {
             isMove = false; // je dis à l'autre d'arrêté
+            yield return null;  //j'attend le prochain frame
         }
 
         isMove = true;  // je dis que je commence
 
         //////////////////////////////////////////////////////////////////////////////
         Vector3 middle = (target - transform.position) / 2 + transform.position;
-        middle.y -= 2;
+        middle.z -= 2;
 
         Vector3 startPosition = transform.position;  // la position actuelle de la caméra
         float elapsedTime = 0.0f;  // le temps écoulé depuis le début de la transition
