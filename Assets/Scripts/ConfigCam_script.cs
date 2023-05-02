@@ -12,7 +12,7 @@ public class ConfigCam_script : MonoBehaviour
     void Start()
     {
         speedSlider.onValueChanged.AddListener((float value) => { 
-            Camera.GetComponentInChildren<Camera_script>().SetSpeed(value); 
+            Camera.GetComponentInChildren<Camera_script>().SetTransition(value); 
         });
     }
 
