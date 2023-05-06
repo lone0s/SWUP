@@ -33,7 +33,7 @@ public class AddPrefab_script : MonoBehaviour
 
         // On rattache la planet crée au script du prefab
         Onglet_script OngletScript = newOnglet.GetComponent<Onglet_script>();
-        OngletScript.SetPlanet(planet);
+        OngletScript.SetObjet(planet);
         OngletScript.SetCamScript(camScript);
 
         // Met à jour le texte du bouton

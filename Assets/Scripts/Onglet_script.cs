@@ -9,7 +9,7 @@ public class Onglet_script : MonoBehaviour
 {
     private Button mainButton;
     private Button deleteButton;
-    private GameObject planet;
+    private GameObject objet;
     private Camera_script camScript;
 
     // Start is called before the first frame update
@@ -22,12 +22,12 @@ public class Onglet_script : MonoBehaviour
         mainButton.onClick.AddListener(MyOnClickMethod);
 
         deleteButton = this.transform.Find("Close_btn").GetComponent<Button>();
-        deleteButton.onClick.AddListener(() => { if(planet)Destroy(planet); Destroy(gameObject); });
+        deleteButton.onClick.AddListener(() => { if(objet) Destroy(objet); Destroy(gameObject); });
     }
 
     private void MyOnClickMethod()
     {
-        camScript.MoveToTarget(planet.GetComponent<Planet_script>().GetPosCam());
+        camScript.MoveToTarget(objet.GetComponent<Planet_script>().GetPosCam());
     }
 
     // Update is called once per frame
@@ -36,9 +36,9 @@ public class Onglet_script : MonoBehaviour
         
     }
 
-    internal void SetPlanet(GameObject obj)
+    internal void SetObjet(GameObject obj)
     {
-        this.planet = obj;
+        this.objet = obj;
     }
 
     internal void SetCamScript(Camera_script script)
