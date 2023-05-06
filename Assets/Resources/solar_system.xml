@@ -7,8 +7,12 @@
   </planet>
   <planet name="Venus" radius="0.25" period="224.701">
     <position x="2.5" y="0" z="0"/>
-    <planet name="Moon Venus" radius="0.0173954" period="224.701"></planet>
-    <planet name="Moon Venus222" radius="0.0173954" period="224.701"></planet>
+    <planet name="Moon Venus" radius="0.0173954" period="224.701">
+      <position x="2.5" y="0" z="0"/>
+    </planet>
+    <planet name="Moon Venus222" radius="0.0173954" period="224.701">
+      <position x="2.5" y="0" z="0"/>
+    </planet>
   </planet>
   <planet name="Terre" radius="0.25" period="365.256">
     <position x="3.5" y="0" z="0"/>
