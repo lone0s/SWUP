@@ -44,13 +44,6 @@ public class Menus_script : MonoBehaviour
             Dropdown dropdown = Instantiate(dropdownPrefab, transform.position, Quaternion.identity);
             Transform template = dropdown.template;
 
-            /*if(this.function != null){
-                Debug.Log("not null");
-                Dropdown_element_script script = template.Find("Viewport/Content/Item/Item Label").GetComponent<Dropdown_element_script>();
-                script.function = function; 
-                script.obj = o; 
-            }*/
-
             List<string> options = new List<string>();  
             foreach(KeyValuePair<string, UsableObject> child in o.children){
                 options.Add(child.Key);

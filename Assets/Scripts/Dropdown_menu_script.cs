@@ -5,7 +5,7 @@ using UnityEngine;
 using UnityEngine.UI;
 
 
-public class Dropdown_element_script : MonoBehaviour
+public class Dropdown_menu_script : MonoBehaviour
 {
     private Menus_script script;
     public Func<string, string> function;

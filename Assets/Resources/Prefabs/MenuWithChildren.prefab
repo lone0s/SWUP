@@ -275,7 +275,7 @@ MonoBehaviour:
   m_GameObject: {fileID: 5081669601475701039}
   m_Enabled: 1
   m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: b5836a59e02f0f2c09a8c4c6531da01a, type: 3}
+  m_Script: {fileID: 11500000, guid: 454836bb656de0f43ba2e3ed8a24f32f, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
 --- !u!1 &5081669601553907018
@@ -581,7 +581,6 @@ GameObject:
   - component: {fileID: 5081669601795342461}
   - component: {fileID: 5081669601795342460}
   - component: {fileID: 1794041329774835646}
-  - component: {fileID: 5911111426053435027}
   m_Layer: 5
   m_Name: MenuWithChildren
   m_TagString: Untagged
@@ -729,18 +728,6 @@ MonoBehaviour:
   m_FlexibleWidth: -1
   m_FlexibleHeight: -1
   m_LayoutPriority: 1
---- !u!114 &5911111426053435027
-MonoBehaviour:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 5081669601795342457}
-  m_Enabled: 1
-  m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: b5836a59e02f0f2c09a8c4c6531da01a, type: 3}
-  m_Name: 
-  m_EditorClassIdentifier: 
 --- !u!1 &5081669601906997205
 GameObject:
   m_ObjectHideFlags: 0
