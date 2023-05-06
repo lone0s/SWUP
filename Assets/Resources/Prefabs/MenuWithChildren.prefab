@@ -139,7 +139,8 @@ GameObject:
   - component: {fileID: 5081669601475701036}
   - component: {fileID: 5081669601475701042}
   - component: {fileID: 5081669601475701037}
-  - component: {fileID: 4871401965705884889}
+  - component: {fileID: 397667039761209234}
+  - component: {fileID: 4508195830549342508}
   m_Layer: 5
   m_Name: Item Label
   m_TagString: Untagged
@@ -209,7 +210,7 @@ MonoBehaviour:
     m_VerticalOverflow: 0
     m_LineSpacing: 1
   m_Text: Option A
---- !u!114 &4871401965705884889
+--- !u!114 &397667039761209234
 MonoBehaviour:
   m_ObjectHideFlags: 0
   m_CorrespondingSourceObject: {fileID: 0}
@@ -249,11 +250,11 @@ MonoBehaviour:
     m_SelectedTrigger: Selected
     m_DisabledTrigger: Disabled
   m_Interactable: 1
-  m_TargetGraphic: {fileID: 5081669601475701037}
+  m_TargetGraphic: {fileID: 0}
   m_OnClick:
     m_PersistentCalls:
       m_Calls:
-      - m_Target: {fileID: 5911111426053435027}
+      - m_Target: {fileID: 4508195830549342508}
         m_TargetAssemblyTypeName: Dropdown_element_script, Assembly-CSharp
         m_MethodName: OnClickItem
         m_Mode: 1
@@ -265,6 +266,18 @@ MonoBehaviour:
           m_StringArgument: 
           m_BoolArgument: 0
         m_CallState: 2
+--- !u!114 &4508195830549342508
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 5081669601475701039}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: b5836a59e02f0f2c09a8c4c6531da01a, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
 --- !u!1 &5081669601553907018
 GameObject:
   m_ObjectHideFlags: 0
@@ -274,7 +287,7 @@ GameObject:
   serializedVersion: 6
   m_Component:
   - component: {fileID: 5081669601553907019}
-  - component: {fileID: 5081669601553907016}
+  - component: {fileID: 6170407844113606612}
   m_Layer: 5
   m_Name: Item
   m_TagString: Untagged
@@ -304,7 +317,7 @@ RectTransform:
   m_AnchoredPosition: {x: 0, y: 0}
   m_SizeDelta: {x: 0, y: 40}
   m_Pivot: {x: 0.5, y: 0.5}
---- !u!114 &5081669601553907016
+--- !u!114 &6170407844113606612
 MonoBehaviour:
   m_ObjectHideFlags: 0
   m_CorrespondingSourceObject: {fileID: 0}
@@ -344,7 +357,7 @@ MonoBehaviour:
     m_SelectedTrigger: Selected
     m_DisabledTrigger: Disabled
   m_Interactable: 1
-  m_TargetGraphic: {fileID: 5081669601575575628}
+  m_TargetGraphic: {fileID: 0}
   toggleTransition: 1
   graphic: {fileID: 0}
   m_Group: {fileID: 0}
@@ -570,7 +583,7 @@ GameObject:
   - component: {fileID: 1794041329774835646}
   - component: {fileID: 5911111426053435027}
   m_Layer: 5
-  m_Name: ElementWithChildren
+  m_Name: MenuWithChildren
   m_TagString: Untagged
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0

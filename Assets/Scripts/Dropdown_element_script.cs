@@ -1,3 +1,4 @@
+using System;
 using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
@@ -6,17 +7,22 @@ using UnityEngine.UI;
 
 public class Dropdown_element_script : MonoBehaviour
 {
-    public Planet planet;
-    private Element_script script;
+    private Menus_script script;
+    public Func<string, string> function;
 
     void Start()
     {
-        this.script = GetComponentInParent<Element_script>();
+        this.script = GetComponentInParent<Menus_script>();
+        this.function = script.function;
     }
 
     public void OnClickItem()
     {
-        this.script.OnClick(planet);
+        string objName = gameObject.GetComponent<Text>().text;
+        if(function != null && objName != null){
+            this.function.Invoke(objName);
+        }
+        
     }
 
     void Update()

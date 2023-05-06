@@ -8,17 +8,20 @@ using static UnityEngine.GraphicsBuffer;
 public class Planet_script : MonoBehaviour
 {
 
+    public Planet planet;
     private Vector3 posCam;
     private float distance = -2.5f;
 
-    // Start is called before the first frame update
     void Start()
     {
-        //GameObject planet = GetComponent<GameObject>();
         this.SetPosCam(gameObject.transform);
     }
 
-    // Update is called once per frame
+    void FixedUpdate(){
+        //gameObject.transform.Rotate(gameObject.transform.up * this.planet.period * Time.deltaTime);
+        //gameObject.transform.RotateAround (Vector3.zero, Vector3.up, this.planet.period * Time.deltaTime * 5);
+    }
+
     void Update()
     {
     }

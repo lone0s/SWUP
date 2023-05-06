@@ -3,15 +3,17 @@ using System.Collections.Generic;
 using System.Dynamic;
 using UnityEditor;
 using UnityEngine;
+using UnityEngine.UI;
 using System.Xml;
 using System.Reflection;
 using System.Xml.Serialization;
 
 public class Main_script : MonoBehaviour
 {
-    [SerializeField] private GameObject planet;
+    public Camera camera;
+
     [SerializeField] private UnityEngine.Object xmlFile;
-    public Dictionary<string, Planet> planets;
+    public Dictionary<string, UsableObject> objects;
 
     void Start()
     {
@@ -21,10 +23,12 @@ public class Main_script : MonoBehaviour
             InitObjects(path);
         }
 
-        foreach (KeyValuePair<string, Planet> planet in planets)
+        foreach (KeyValuePair<string, UsableObject> obj in this.objects)
         {
-            AddPlanet(planet.Value);
+            AddPlanet((Planet) obj.Value);
         }
+
+        InitMenus();
     }
 
     void Update()
@@ -32,6 +36,27 @@ public class Main_script : MonoBehaviour
         
     }
 
+    public void InitMenus(){
+        Menus_script script = gameObject.GetComponentInChildren<Menus_script>();
+        script.menus = this.objects;
+        script.function = (arg) => { OnClickMenu(arg); return null; };
+        script.InitMenusPanel();
+
+        foreach(KeyValuePair<string, Button> obj in script.clickable){
+            obj.Value.onClick.AddListener(() => OnClickMenu(obj.Key));
+        }
+    }
+
+    public void OnClickMenu(string objName){
+        GameObject gObj = GameObject.Find(objName);
+        if(gObj != null){
+            Planet_script script = gObj.GetComponent<Planet_script>();
+            Vector3 posCam = script.GetPosCam();
+            Camera_script camScript = camera.GetComponent<Camera_script>();
+            camScript.MoveToTarget(posCam);
+        }
+        
+    }
 
     public void AddPlanet(Planet p){
         GameObject sphere = GameObject.CreatePrimitive(PrimitiveType.Sphere);
@@ -40,18 +65,19 @@ public class Main_script : MonoBehaviour
         sphere.transform.localScale = new Vector3(p.radius, p.radius, p.radius);
 
         sphere.AddComponent<Planet_script>();
+        Planet_script script = sphere.GetComponentInChildren<Planet_script>();
+        script.planet = p;
 
         Renderer renderer = sphere.GetComponent<Renderer>();
         if (renderer != null)
         {
-            Debug.Log(Resources.Load<Material>("Materials/" + p.name.ToLower()));
             renderer.material = Resources.Load<Material>("Materials/" + p.name.ToLower());
         }
 
     }
 
     private void InitObjects(string path){
-        this.planets = new Dictionary<string, Planet>();
+        this.objects = new Dictionary<string, UsableObject>();
 
         XmlDocument xmlDoc = new XmlDocument();
         xmlDoc.Load(path);
@@ -61,19 +87,20 @@ public class Main_script : MonoBehaviour
         foreach (XmlNode planet in root.ChildNodes)
         {
             
-            Planet p = getPlanet(planet);
+            UsableObject obj = getPlanet(planet);
             
-            this.planets.Add(p.name, p);
+            this.objects.Add(obj.name, obj);
         }
     }
 
-    private Planet getPlanet(XmlNode planet){
+    private UsableObject getPlanet(XmlNode node){
         Planet p = new Planet();
-        p.name = planet.Attributes["name"].Value;
-        p.radius = StringToFloat(planet.Attributes["radius"].Value);
-        p.satellite = new Dictionary<string, Planet>();
+        p.name = node.Attributes["name"].Value;
+        p.radius = StringToFloat(node.Attributes["radius"].Value);
+        p.period = StringToFloat(node.Attributes["period"].Value);
+        p.children = new Dictionary<string, UsableObject>();
 
-        foreach (XmlNode attr in planet.ChildNodes)
+        foreach (XmlNode attr in node.ChildNodes)
         {
             switch (attr.Name)
             {
@@ -81,16 +108,8 @@ public class Main_script : MonoBehaviour
                     p.position = getVector(attr);
                     break;
                 case "planet":
-                    Planet s = getPlanet(attr);
-                    p.satellite.Add(s.name,s);
-                    break;
-                case "orbit":
-                    Orbit o = new Orbit();
-                    o.semimajoraxis = StringToFloat(attr.Attributes["semimajoraxis"].Value);
-                    o.eccentricity = StringToFloat(attr.Attributes["eccentricity"].Value);
-                    o.inclination = StringToFloat(attr.Attributes["inclination"].Value);
-                    o.period = StringToFloat(attr.Attributes["period"].Value);
-                    p.orbit = o;
+                    UsableObject s = getPlanet(attr);
+                    p.children.Add(s.name,s);
                     break;
                 default:
                     break;
@@ -111,19 +130,17 @@ public class Main_script : MonoBehaviour
     }
 }
 
-public class Planet
+
+
+public class UsableObject
 {
     public string name;
-    public float radius;
-    public Vector3 position;
-    public Orbit orbit;
-    public Dictionary<string, Planet> satellite;
+    public Dictionary<string, UsableObject> children;
 }
 
-public class Orbit
+public class Planet : UsableObject
 {
-    public float semimajoraxis;
-    public float eccentricity;
-    public float inclination;
+    public float radius;
     public float period;
+    public Vector3 position;
 }

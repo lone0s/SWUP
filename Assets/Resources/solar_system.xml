@@ -1,33 +1,36 @@
 <solar_system>
-<planet name="Soleil" radius="1.75">
-<position x="0" y="0" z="0"/>
-</planet>
-<planet name="Mercure" radius="0.25" period="87.969">
-<position x="1.5" y="0" z="0"/>
-</planet>
-<planet name="Venus" radius="0.25" period="224.701">
-<position x="2.5" y="0" z="0"/>
-<planet name="Moon Venus" radius="0.0173954"><!-- TODO --></planet>
-<planet name="Moon Venus222" radius="0.0173954"><!-- TODO --></planet>
-</planet>
-<planet name="Terre" radius="0.25" period="365.256">
-<position x="3.5" y="0" z="0"/>
-<planet name="Moon" radius="0.0086977"><!-- TODO --></planet>
-</planet>
-<planet name="Mars" radius="0.25" period="686.971">
-<position x="4.5" y="0" z="0"/>
-</planet>
-<planet name="Jupiter" radius="0.75" period="4332.59">
-<position x="5.5" y="0" z="0"/>
-</planet>
-<planet name="Saturne" radius="0.75" period="10759.22">
-<position x="6.5" y="0" z="0"/>
-</planet>
-<planet name="Uranus" radius="0.5" period="30685.4">
-<position x="7.5" y="0" z="0"/>
-</planet>
-<planet name="Neptune" radius="0.5" period="60189.0">
-<position x="8.5" y="0" z="0"/>
-</planet>
+  <planet name="Soleil" radius="1.75" period="24">
+    <position x="0" y="0" z="0"/>
+  </planet>
+  <planet name="Mercure" radius="0.25" period="87.969">
+    <position x="1.5" y="0" z="0"/>
+  </planet>
+  <planet name="Venus" radius="0.25" period="224.701">
+    <position x="2.5" y="0" z="0"/>
+    <planet name="Moon Venus" radius="0.0173954" period="224.701"></planet>
+    <planet name="Moon Venus222" radius="0.0173954" period="224.701"></planet>
+  </planet>
+  <planet name="Terre" radius="0.25" period="365.256">
+    <position x="3.5" y="0" z="0"/>
+    <planet name="Moon" radius="0.0086977" period="365.256"></planet>
+  </planet>
+    <planet name="Mars" radius="0.25" period="686.971">
+    <position x="4.5" y="0" z="0"/>
+  </planet>
+  <planet name="Jupiter" radius="0.75" period="4332.59">
+    <position x="5.5" y="0" z="0"/>
+  </planet>
+    <planet name="Saturne" radius="0.75" period="10759.22">
+    <position x="6.5" y="0" z="0"/>
+  </planet>  
+  <planet name="Uranus" radius="0.5" period="30685.4">
+    <position x="7.5" y="0" z="0"/>
+  </planet>
+  <planet name="Neptune" radius="0.5" period="60189.0">
+    <position x="8.5" y="0" z="0"/>
+  </planet>
+  <planet name="Lebon_James" radius="0.5" period="60189.0">
+    <position x="9.5" y="0" z="0"/>
+  </planet>
 </solar_system>
 
