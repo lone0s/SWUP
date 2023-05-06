@@ -1,3 +1,4 @@
+using System;
 using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
@@ -5,12 +6,17 @@ using UnityEngine.UI;
 
 public class AddPrefab_script : MonoBehaviour
 {
-    public GameObject prefab;
-    public GameObject cam;
+    private GameObject prefab;
+    private Camera cam;
     private Camera_script camScript;
     // Start is called before the first frame update
     void Start()
     {
+        prefab = Resources.Load<GameObject>("Prefabs/Onglet");
+        if (prefab == null)
+            Debug.LogError("Impossible de charger le prefab depuis les ressources : Prefabs/Onglet");
+        
+        cam = Camera.main;
         camScript = cam.GetComponent<Camera_script>();
     }
 
