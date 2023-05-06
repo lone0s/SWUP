@@ -5,15 +5,22 @@ using UnityEngine.UI;
 
 public class ConfigCam_script : MonoBehaviour
 {
-    public GameObject Camera;
+    private Camera cam;
+    private Camera_script cam_script;
     public Slider speedSlider;
+    private Button reset;
 
     // Start is called before the first frame update
     void Start()
     {
-        speedSlider.onValueChanged.AddListener((float value) => { 
-            Camera.GetComponentInChildren<Camera_script>().SetTransition(value); 
+        cam = Camera.main;
+        cam_script = cam.GetComponentInChildren<Camera_script>();
+        speedSlider.onValueChanged.AddListener((float value) => {
+            cam_script.SetTransition(value); 
         });
+
+        reset = transform.Find("Reset_btn").GetComponent<Button>();
+        reset.onClick.AddListener(() => cam_script.Reset());
     }
 
     // Update is called once per frame
