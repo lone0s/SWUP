@@ -15,7 +15,6 @@ public class Planet_script : MonoBehaviour
 
     void Start()
     {
-        this.SetPosCam(gameObject.transform);
     }
 
     void FixedUpdate(){
@@ -30,14 +29,11 @@ public class Planet_script : MonoBehaviour
     void Update()
     {
     }
-    internal void SetPosCam(Transform target)
-    {
-        posCam = target.position;
-        posCam.z = target.position.z + distance;
-    }
 
     internal Vector3 GetPosCam()
     {
+        posCam = gameObject.transform.position;
+        posCam.z = gameObject.transform.position.z + distance;
         return posCam;
     }
 }

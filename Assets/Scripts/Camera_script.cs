@@ -8,6 +8,7 @@ public class Camera_script : MonoBehaviour
     private float transition = 5.0f;  // la durée de la transition en secondes
     private bool isMove = false;
     private Vector3 initPos;
+    private Planet_script objet_followed;
     private int move;
 
     // Start is called before the first frame update
@@ -22,10 +23,23 @@ public class Camera_script : MonoBehaviour
         
     }
 
+    private void FixedUpdate()
+    {
+        if (!isMove)
+            if(objet_followed != null)
+                transform.position = objet_followed.GetPosCam();
+    }
+
     public void Reset()
     {
         isMove = false; // je dis d'arrêter le mouvement
         transform.position = initPos;
+        objet_followed = null;
+    }
+
+    public void setObjetFollowed(GameObject objet)
+    {
+        objet_followed = objet.GetComponent<Planet_script>();
     }
 
     public void SetTransition(float newTime)
@@ -38,22 +52,24 @@ public class Camera_script : MonoBehaviour
         this.move = value;
     }
 
-    public void MoveToTarget(Vector3 target)
+    public void MoveToTarget(GameObject objet)
     {
+        setObjetFollowed(objet);
+
         switch (move)
         {
             case 0:
-                StartCoroutine(MoveToTargetCoroutine(target));
+                StartCoroutine(MoveToTargetCoroutine());
                 break;
             case 1:
-                StartCoroutine(ZoomMoveToTargetCoroutine(target));
+                StartCoroutine(ZoomMoveToTargetCoroutine());
                 break;
             default:
                 break;
         }        
     }
 
-    private IEnumerator MoveToTargetCoroutine(Vector3 target)
+    private IEnumerator MoveToTargetCoroutine()
     {
         if (isMove)// si la fonction est déjà appelé
         {
@@ -72,22 +88,17 @@ public class Camera_script : MonoBehaviour
             float t = Mathf.Clamp01(elapsedTime / transition);  // la progression de la transition (entre 0 et 1)
 
             // Interpolation linéaire de la position de la caméra
-            transform.position = Vector3.Lerp(startPosition, target, t);
+            transform.position = Vector3.Lerp(startPosition, objet_followed.GetPosCam(), t);
 
             yield return null;  //j'attend le prochain frame
         }
 
         if (isMove)//si j'ai toujours la main
-        {
-            // je fixe la position de la caméra à la nouvelle position
-            transform.position = target;
-
             // je dis que j'ai fini
             isMove = false;
-        }
     }
 
-    private IEnumerator ZoomMoveToTargetCoroutine(Vector3 target)
+    private IEnumerator ZoomMoveToTargetCoroutine()
     {
         if (isMove)// si la fonction est déjà appelé
         {
@@ -98,9 +109,6 @@ public class Camera_script : MonoBehaviour
         isMove = true;  // je dis que je commence
 
         //////////////////////////////////////////////////////////////////////////////
-        Vector3 middle = (target - transform.position) / 2 + transform.position;
-        middle.z -= 2;
-
         Vector3 startPosition = transform.position;  // la position actuelle de la caméra
         float elapsedTime = 0.0f;  // le temps écoulé depuis le début de la transition
 
@@ -110,7 +118,7 @@ public class Camera_script : MonoBehaviour
             float t = Mathf.Clamp01(elapsedTime / (transition / 2));  // la progression de la transition (entre 0 et 1)
 
             // Interpolation linéaire de la position de la caméra
-            transform.position = Vector3.Lerp(startPosition, middle, t);
+            transform.position = Vector3.Lerp(startPosition, initPos, t);
 
             yield return null;  //j'attend le prochain frame
         }
@@ -126,7 +134,7 @@ public class Camera_script : MonoBehaviour
             float t = Mathf.Clamp01(elapsedTime / (transition / 2));  // la progression de la transition (entre 0 et 1)
 
             // Interpolation linéaire de la position de la caméra
-            transform.position = Vector3.Lerp(startPosition, target, t);
+            transform.position = Vector3.Lerp(startPosition, objet_followed.GetPosCam(), t);
 
             yield return null;  //j'attend le prochain frame
         }
@@ -134,12 +142,7 @@ public class Camera_script : MonoBehaviour
         
 
         if (isMove)//si j'ai toujours la main
-        {
-            // je fixe la position de la caméra à la nouvelle position
-            transform.position = target;
-
             // je dis que j'ai fini
             isMove = false;
-        }
     }
 }

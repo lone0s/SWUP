@@ -27,7 +27,7 @@ public class Onglet_script : MonoBehaviour
 
     private void MyOnClickMethod()
     {
-        camScript.MoveToTarget(objet.GetComponent<Planet_script>().GetPosCam());
+        camScript.MoveToTarget(objet);
     }
 
     // Update is called once per frame

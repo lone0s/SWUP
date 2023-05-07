@@ -26,14 +26,14 @@ public class AddPrefab_script : MonoBehaviour
         
     }
 
-    public void AddPrefab(string name, GameObject planet){
+    public void AddPrefab(string name, GameObject objet){
        
         // Instancie le prefab à la position de l'objet courant
         GameObject newOnglet = Instantiate(prefab, transform.position, Quaternion.identity);
 
         // On rattache la planet crée au script du prefab
         Onglet_script OngletScript = newOnglet.GetComponent<Onglet_script>();
-        OngletScript.SetObjet(planet);
+        OngletScript.SetObjet(objet);
         OngletScript.SetCamScript(camScript);
 
         // Met à jour le texte du bouton

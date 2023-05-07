@@ -1,5 +1,7 @@
 using System.Collections;
 using System.Collections.Generic;
+using Unity.VisualScripting;
+using UnityEditor;
 using UnityEngine;
 using UnityEngine.UI;
 
@@ -16,8 +18,8 @@ public class Add_script : MonoBehaviour
     //taille, position, vitesse rotation, materiel
     public float size_objet = 1f;
     public Vector3 position_objet = Vector3.zero;
-    public float speed_objet = 1;
     public Color color_objet = Color.white;
+    public MonoScript script_objet = null;
 
     // Start is called before the first frame update
     void Start()
@@ -30,7 +32,7 @@ public class Add_script : MonoBehaviour
         script = parent.GetComponent<AddPrefab_script>();
 
         if (objet == null)
-            Debug.LogError("Tu n'as pas renseigné l'objet à ajouter");
+            Debug.LogError("Tu n'as pas renseigné l'objet à ajouter. Par défaut, ce sera une sphere");
     }
 
     // Update is called once per frame
@@ -40,17 +42,19 @@ public class Add_script : MonoBehaviour
     }
 
     private void CreateObject(){
-        // Crée une nouvelle sphère avec les propriétés spécifiées
-        objet.name = Name_objet;
-        objet.transform.position = position_objet;
-        objet.transform.localScale = new Vector3(size_objet, size_objet, size_objet);
+        // Crée un objet avec les propriétés spécifiées
+        GameObject newObjet = (objet == null) ? GameObject.CreatePrimitive(PrimitiveType.Sphere) : objet;
 
-        objet.AddComponent<Planet_script>();
-        Planet_script planet_Script = objet.GetComponent<Planet_script>();
-        planet_Script.SetPosCam(objet.transform);
+        newObjet.name = Name_objet;
+        newObjet.transform.position = position_objet;
+        newObjet.transform.localScale = new Vector3(size_objet, size_objet, size_objet);
 
-        // Applique la couleur spécifiée au matériau de la sphère
-        Renderer renderer = objet.GetComponent<Renderer>();
+        // Ajouter le un script à l'objet
+        if(script_objet != null)
+            newObjet.AddComponent(script_objet.GetClass());
+
+        // Applique la couleur spécifiée au matériau de l'objet
+        Renderer renderer = newObjet.GetComponent<Renderer>();
         if (renderer != null)
         {
             Material material = renderer.material;
@@ -60,6 +64,6 @@ public class Add_script : MonoBehaviour
             }
         }
 
-        script.AddPrefab(Name_objet, objet);
+        script.AddPrefab(Name_objet, newObjet);
     }
 }

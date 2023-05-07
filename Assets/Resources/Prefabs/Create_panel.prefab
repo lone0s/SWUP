@@ -236,11 +236,13 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: fd10baeddf2561a449287cb472d8861a, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  Name_object: "Plan\xE8te"
-  size_object: 1
-  position_object: {x: -2, y: 0, z: 0}
-  speed_object: 1
-  color_object: {r: 1, g: 1, b: 1, a: 1}
+  objet: {fileID: 0}
+  Name_objet: "Plan\xE8te"
+  size_objet: 1
+  position_objet: {x: 0, y: 0, z: 0}
+  speed_objet: 1
+  color_objet: {r: 1, g: 1, b: 1, a: 1}
+  script_objet: {fileID: 11500000, guid: 1967de1568614264a9df05044aed4d7a, type: 3}
 --- !u!1 &8260865484654881829
 GameObject:
   m_ObjectHideFlags: 0

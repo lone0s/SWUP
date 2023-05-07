@@ -50,10 +50,8 @@ public class Main_script : MonoBehaviour
     public void OnClickMenu(string objName){
         GameObject gObj = GameObject.Find(objName);
         if(gObj != null){
-            Planet_script script = gObj.GetComponent<Planet_script>();
-            Vector3 posCam = script.GetPosCam();
             Camera_script camScript = camera.GetComponent<Camera_script>();
-            camScript.MoveToTarget(posCam);
+            camScript.MoveToTarget(gObj);
         }
         
     }
