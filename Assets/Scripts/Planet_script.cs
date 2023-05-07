@@ -15,6 +15,7 @@ public class Planet_script : MonoBehaviour
 
     void Start()
     {
+        distance *= planet.radius;
     }
 
     void FixedUpdate(){
