@@ -24,18 +24,14 @@ public class Planet_script : MonoBehaviour
 
     void FixedUpdate(){
         float timeFullRotation =  timeFullRotationEarth * this.planet.period / 365;// La terre fait une rotation complète en 10s, les autres planètes scale en fonction
-        float fullRotationSpeed = 360 / timeFullRotation; // degrées par seconde
+        float fullRotationSpeed = timeFullRotation != 0 ? 360 / timeFullRotation : 0; // degrées par seconde
 
         float timeAxisRotation = timeAxisRotationEarth * this.planet.rotation_days / 365;
-        float axisRotationSpeed = 360 / timeAxisRotation;
-
-
-
-        gameObject.transform.Rotate(gameObject.transform.up * axisRotationSpeed * Time.deltaTime);
-
+        float axisRotationSpeed = timeAxisRotation != 0 ? 360 / timeAxisRotation : 0;
 
         Vector3 axisRotation = parent != null ? parent.transform.position : Vector3.zero;
 
+        gameObject.transform.Rotate(gameObject.transform.up * axisRotationSpeed * Time.deltaTime);
         gameObject.transform.RotateAround(axisRotation, Vector3.up, fullRotationSpeed * Time.deltaTime);
 
     }
