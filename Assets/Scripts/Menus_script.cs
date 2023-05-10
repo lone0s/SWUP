@@ -26,8 +26,17 @@ public class Menus_script : MonoBehaviour
     {
     }
 
-    public void InitMenusPanel(){
+     public void ClearPanel()
+    {
+        Transform panelTransform = gameObject.GetComponent<Transform>();
+        foreach (Transform child in panelTransform)
+        {
+            Destroy(child.gameObject);
+        }
+    }
 
+    public void InitMenusPanel(){
+        this.ClearPanel();
         this.clickable = new Dictionary<string, Button>();
 
         if(menus != null){
