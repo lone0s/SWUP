@@ -7,16 +7,16 @@
   </planet>
   <planet name="Venus" radius="0.25" period="224.701" rotation_days="243.025">
     <position x="2.5" y="0" z="0"/>
-    <planet name="Venus1" radius="0.0173954" period="224.701" rotation_days="243.025">
-      <position x="2.5" y="1" z="0"/>
+    <planet name="Ceres" radius="0.10" period="224.701" rotation_days="243.025">
+      <position x="2.5" y="0" z="0.5"/>
     </planet>
-    <planet name="Venus2" radius="0.0173954" period="224.701" rotation_days="243.025">
-      <position x="2.5" y="1" z="0"/>
+    <planet name="Haumea" radius="0.10" period="224.701" rotation_days="243.025">
+      <position x="2.5" y="0" z="-0.5"/>
     </planet>
   </planet>
   <planet name="Terre" radius="0.25" period="365.256" rotation_days="0.997">
     <position x="3.5" y="0" z="0"/>
-    <planet name="Lune" radius="0.15" period="300" rotation_days="27.322">
+    <planet name="Lune" radius="0.10" period="300" rotation_days="27.322">
       <position x="3.5" y="0" z="0.5"/>
     </planet>
   </planet>

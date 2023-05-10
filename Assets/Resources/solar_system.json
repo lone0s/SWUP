@@ -1,0 +1,62 @@
+{
+    "planets" : [
+        {
+            "name": "Soleil",
+            "radius": "1.75",
+            "period": "24",
+            "rotation_days": "24",
+            "position": {
+                "x": "1",
+                "y": "0",
+                "z": "0"
+            }
+        },
+        {
+            "name": "Mercure",
+            "radius": "0.25",
+            "period": "87.969",
+            "rotation_days": "58.646",
+            "position": {
+                "x": "1.5",
+                "y": "0",
+                "z": "0"
+            }
+        },
+        {
+            "name": "Venus",
+            "radius": "0.25",
+            "period": "224.701",
+            "rotation_days": "243.025",
+            "position": {
+              "x": "2.5",
+              "y": "0",
+              "z": "0"
+            },
+            "children": [
+                {
+                    "name": "Ceres",
+                    "radius": "0.10",
+                    "period": "224.701",
+                    "rotation_days": "243.025",
+                    "position": {
+                    "x": "2.5",
+                    "y": "0",
+                    "z": "0.5"
+                    }
+                },
+                {
+                    "name": "Haumea",
+                    "radius": "0.10",
+                    "period": "224.701",
+                    "rotation_days": "243.025",
+                    "position": {
+                    "x": "2.5",
+                    "y": "0",
+                    "z": "-0.5"
+                    }
+                }
+            ]
+        }
+    ]
+}
+  
