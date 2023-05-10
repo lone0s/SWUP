@@ -7,12 +7,14 @@ using UnityEngine.UI;
 using System.Xml;
 using System.Reflection;
 using System.Xml.Serialization;
+using System.IO;
 
 public class Main_script : MonoBehaviour
 {
     public Camera cam;
 
     [SerializeField] private UnityEngine.Object xmlFile;
+    [SerializeField] private UnityEngine.Object jsonFile;
     public Dictionary<string, UsableObject> objects;
 
     void Start()
@@ -21,6 +23,8 @@ public class Main_script : MonoBehaviour
         {
             string path = AssetDatabase.GetAssetPath(xmlFile);
             InitObjects(path);
+            string jsonPath = AssetDatabase.GetAssetPath(jsonFile);
+            InitJsonObjects(jsonPath);
         }
 
         foreach (KeyValuePair<string, UsableObject> obj in this.objects)
@@ -100,6 +104,29 @@ public class Main_script : MonoBehaviour
         }
     }
 
+    private void InitJsonObjects(string path){
+        string json = File.ReadAllText(path);
+        SolarSystem data = JsonUtility.FromJson<SolarSystem>(json);
+
+        PlanetData pp = new PlanetData();
+        //pp.Children = new Planet[2];
+        pp.Children[0] = new Planet();
+
+        foreach (PlanetData p in data.planets) {
+            Debug.Log(p.name);
+            /*foreach(KeyValuePair<string,UsableObject> child in p.children2){
+                Debug.Log(child.Key);
+            }*/
+            /*foreach(UsableObject child in p.children){
+                Debug.Log(child.name);
+            }*/
+            /*foreach(UsableObject child in p.Children){
+                Debug.Log(child.name);
+            }*/
+        }
+
+    }
+
     private UsableObject getPlanet(XmlNode node){
         Planet p = new Planet();
         p.name = node.Attributes["name"].Value;
@@ -138,7 +165,6 @@ public class Main_script : MonoBehaviour
 }
 
 
-
 public abstract class UsableObject
 {
     public string name = "Object";
@@ -146,6 +172,7 @@ public abstract class UsableObject
 
     public abstract string extractXML();
 }
+
 
 public class Planet : UsableObject
 {
@@ -157,4 +184,49 @@ public class Planet : UsableObject
     public override string extractXML(){
         return "";
     }
+}
+
+[System.Serializable]
+public abstract class UsableObjectData
+{
+    public string name = "Object";
+    public Dictionary<string, UsableObject> children2 = new Dictionary<string, UsableObject>();
+    public Planet[] children = new Planet[0];
+
+    public Planet[] Children 
+    {
+        get{return children;}
+        set
+        {
+            //children = value;
+            Debug.Log("aaaaaaaa");
+            foreach (Planet child in value)
+            {
+                Debug.Log(child.name);
+                Debug.Log(child.name);
+            }
+        }
+    }
+
+    public abstract string extractXML();
+}
+
+[System.Serializable]
+public class PlanetData : UsableObjectData
+{
+    public float radius = 0.25F;
+    public float period = 365F;
+    public float rotation_days = 1;
+    public Vector3 position = new Vector3(0,0,0);
+
+    public override string extractXML(){
+        return "";
+    }
+}
+
+
+
+[System.Serializable]
+public class SolarSystem {
+    public PlanetData[] planets;
 }
