@@ -20,6 +20,7 @@ public class OpenFileDialog_Script : MonoBehaviour
     private Image searchPanelSpecialActionIcon;
     private InputField pathText;
     private string selectedFile;
+    private bool isRun = true;
 
     private void Awake()
     {
@@ -148,6 +149,7 @@ public class OpenFileDialog_Script : MonoBehaviour
             {
                 selectedFile = currentPath;
                 hide();
+                isRun = false;
             });
             onClickEventTrigger.triggers.Add(clickEvent);
         }
@@ -188,7 +190,7 @@ public class OpenFileDialog_Script : MonoBehaviour
         Debug.Log(selectedFile);
     }
 
-    string getPathOfSelectedFile()
+    public string getPathOfSelectedFile()
     {
         return selectedFile;
     }
@@ -201,5 +203,10 @@ public class OpenFileDialog_Script : MonoBehaviour
     public static string RemovePathEntry(string path)
     {
         return Path.GetDirectoryName(path.TrimEnd(Path.DirectorySeparatorChar));
+    }
+
+    public bool GetIsRun()
+    {
+        return this.isRun;
     }
 }
