@@ -15,15 +15,19 @@ public class AttributPanelScript : MonoBehaviour
 
     bool attributePanelHasElements = false;
 
+    private void Awake()
+    {
+        this.compatibleTypes = new HashSet<Type>();
+        fillCompatibleTypes();
+    }
+
     void Start()
     {
     }
 
     
     public void initPanel(object objInstance)
-    {
-        this.compatibleTypes = new HashSet<Type>();
-        fillCompatibleTypes();
+    { 
         this.objectInstance = objInstance;
         this.objectType = objInstance.GetType();
         this.fields = objectType.GetFields();

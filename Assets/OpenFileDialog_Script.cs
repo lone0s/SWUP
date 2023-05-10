@@ -42,14 +42,13 @@ public class OpenFileDialog_Script : MonoBehaviour
     }
     void Start()
     {
-        /* /!\ Fix PathText not taking any input idk why, this is only for testing purposes /!\ */
         directoryPath = Path.Combine(Application.dataPath, "Resources");
         searchPanelSpecialActionIcon = GameObject.Find("SearchPanel/SpecialActionIcon").GetComponent<Image>();
         Debug.Log(searchPanelSpecialActionIcon.name);
         float width, height;
         ImagedText_Script.getWidthHeightOfImg(searchPanelSpecialActionIcon, out width, out height);
         searchPanelSpecialActionIcon.sprite = ImagedText_Script.makeSpriteOfPngFile(goBackIcon, width, height);
-        pathText = GameObject.Find("InputDim").GetComponent<InputField>();
+        pathText = GameObject.Find("SearchPanel/PathInput/Path/InputDim").GetComponent<InputField>();
         pathText.text = correctPathString(directoryPath);
 
         insufflateLines();
