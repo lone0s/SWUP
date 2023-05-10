@@ -24,7 +24,7 @@ public class Main_script : MonoBehaviour
             string path = AssetDatabase.GetAssetPath(xmlFile);
             InitObjects(path);
             string jsonPath = AssetDatabase.GetAssetPath(jsonFile);
-            InitJsonObjects(jsonPath);
+            //InitJsonObjects(jsonPath);
         }
 
         foreach (KeyValuePair<string, UsableObject> obj in this.objects)

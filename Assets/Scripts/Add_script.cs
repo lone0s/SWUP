@@ -8,12 +8,14 @@ using UnityEngine.UI;
 public class Add_script : MonoBehaviour
 {
     private GameObject parent;
-    private AddPrefab_script script;
+    private AddPrefab_script add_script;
+    private SelectPrefab_script select_script;
     private Button addButton;
+    private string objet_path = "";
 
     //Parametre object
-    public GameObject objet;
-    public string Name_objet = "Planète";
+    private GameObject obj;
+    public string name_objet = "Planète";
 
     //taille, position, vitesse rotation, materiel
     public float size_objet = 1f;
@@ -29,10 +31,10 @@ public class Add_script : MonoBehaviour
             Debug.Log("Cet objet n'a pas de parent.");
         addButton = GetComponent<Button>();
         addButton.onClick.AddListener(() => CreateObject());
-        script = parent.GetComponent<AddPrefab_script>();
+        add_script = parent.GetComponent<AddPrefab_script>();
 
-        if (objet == null)
-            Debug.LogWarning("Tu n'as pas renseigné l'objet à ajouter. Par défaut, ce sera une sphere");
+        GameObject select_btn = GameObject.Find("Select_btn");
+        select_script = select_btn.GetComponent<SelectPrefab_script>();
     }
 
     // Update is called once per frame
@@ -42,10 +44,21 @@ public class Add_script : MonoBehaviour
     }
 
     private void CreateObject(){
-        // Crée un objet avec les propriétés spécifiées
-        GameObject newObjet = (objet == null) ? GameObject.CreatePrimitive(PrimitiveType.Sphere) : GameObject.Instantiate(objet);
+        objet_path = select_script.GetSelectedFile();
 
-        newObjet.name = Name_objet;
+        GameObject newObjet;
+        if (!objet_path.Equals(""))
+        {
+            obj = PrefabUtility.LoadPrefabContents(objet_path);
+            newObjet = Instantiate(obj);
+        }
+        else
+        {
+            newObjet = GameObject.CreatePrimitive(PrimitiveType.Sphere);
+        }
+        
+
+        newObjet.name = name_objet;
         newObjet.transform.position = position_objet;
         newObjet.transform.localScale = new Vector3(size_objet, size_objet, size_objet);
 
@@ -63,6 +76,6 @@ public class Add_script : MonoBehaviour
             }
         }
 
-        script.AddPrefab(Name_objet, newObjet);
+        add_script.AddPrefab(name_objet, newObjet);
     }
 }

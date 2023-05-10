@@ -8,7 +8,7 @@ using UnityEngine.UI;
 public class SelectPrefab_script : MonoBehaviour
 {
     private GameObject openFileDialogPrefab;
-    private OpenFileDialog_Script script;
+    private OpenFileDialog_Script openfile_script;
     public GameObject select_panel;
     private Button button;
     private string selectedFile;
@@ -46,7 +46,7 @@ public class SelectPrefab_script : MonoBehaviour
     {
         openFileDialogPrefab = Resources.Load<GameObject>("Prefabs/OpenFileDialog");
         GameObject openFileDialog = Instantiate(openFileDialogPrefab, MainPanelTransform);
-        script = openFileDialog.GetComponent<OpenFileDialog_Script>();
+        openfile_script = openFileDialog.GetComponent<OpenFileDialog_Script>();
     }
 
     void switchImageStateOfPanels()
@@ -59,41 +59,18 @@ public class SelectPrefab_script : MonoBehaviour
 
     private System.Collections.IEnumerator WaitForFalse()
     {
-        while (script.GetIsRun())
+        while (openfile_script.GetIsRun())
         {
             yield return null;
         }
-        selectedFile = script.getPathOfSelectedFile();
+        selectedFile = openfile_script.getPathOfSelectedFile();
         Debug.Log("Received filepath : " + selectedFile);
         switchImageStateOfPanels();
-        script.exit();
+        openfile_script.exit();
     }
 
-    // Start is called before the first frame update
-    /*        void Start()
-            {
-                select_panel.SetActive(false);
-                button = GetComponent<Button>();
-                script = select_panel.GetComponent<OpenFileDialog_Script>();
-                button.onClick.AddListener(MyOnClickMethod);
-            }
-
-            // Update is called once per frame
-            void Update()
-            {
-
-            }
-
-            private void MyOnClickMethod()
-            {
-                Debug.Log("Vroom t'es dans le onClick");
-                select_panel.SetActive(true);
-
-                StartCoroutine(WaitForFalse());
-
-                selectedFile = script.getPathOfSelectedFile();
-                Debug.Log("Resultat: " + selectedFile);
-                select_panel.SetActive(false);
-            }
-    */
+    public string GetSelectedFile()
+    {
+        return selectedFile;
+    }
 }
