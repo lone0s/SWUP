@@ -4,6 +4,7 @@ using System.Collections.Generic;
 using UnityEngine;
 using UnityEngine.UI;
 using UnityEngine.EventSystems;
+using Unity.VisualScripting;
 
 public class Onglet_script : MonoBehaviour
 {
@@ -11,6 +12,7 @@ public class Onglet_script : MonoBehaviour
     private Button deleteButton;
     private GameObject objet;
     private Camera_script camScript;
+    private AttributPanelScript attribut_script;
 
     // Start is called before the first frame update
     void Start()
@@ -18,16 +20,19 @@ public class Onglet_script : MonoBehaviour
         // Récupérer la référence au bouton
         mainButton = GetComponent<Button>();
 
+        attribut_script = GameObject.Find("Attribut_panel").GetComponent<AttributPanelScript>();
+
         // Ajouter la méthode onClick au bouton
         mainButton.onClick.AddListener(MyOnClickMethod);
 
         deleteButton = this.transform.Find("Close_btn").GetComponent<Button>();
-        deleteButton.onClick.AddListener(() => { if(objet) Destroy(objet); Destroy(gameObject); });
+        deleteButton.onClick.AddListener(() => { if (objet) camScript.Reset();  Destroy(objet); Destroy(gameObject); attribut_script.resetPanel(); });
     }
 
     private void MyOnClickMethod()
     {
         camScript.MoveToTarget(objet);
+        attribut_script.initPanel(objet.GetComponent<Planet_script>().planet);
     }
 
     // Update is called once per frame

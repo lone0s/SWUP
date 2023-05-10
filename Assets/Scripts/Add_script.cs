@@ -8,7 +8,7 @@ using UnityEngine.UI;
 public class Add_script : MonoBehaviour
 {
     private GameObject parent;
-    private AddPrefab_script add_script;
+    private AddPrefab_script addPrefab_script;
     private SelectPrefab_script select_script;
     private Button addButton;
     private string objet_path = "";
@@ -30,8 +30,8 @@ public class Add_script : MonoBehaviour
         if (parent == null)
             Debug.Log("Cet objet n'a pas de parent.");
         addButton = GetComponent<Button>();
-        addButton.onClick.AddListener(() => CreateObject());
-        add_script = parent.GetComponent<AddPrefab_script>();
+        addButton.onClick.AddListener(CreateObject);
+        addPrefab_script = parent.GetComponent<AddPrefab_script>();
 
         GameObject select_btn = GameObject.Find("Select_btn");
         select_script = select_btn.GetComponent<SelectPrefab_script>();
@@ -76,6 +76,11 @@ public class Add_script : MonoBehaviour
             }
         }
 
-        add_script.AddPrefab(name_objet, newObjet);
+        addPrefab_script.AddPrefab(name_objet, newObjet);
+    }
+
+    public GameObject GetObject()
+    {
+        return obj;
     }
 }

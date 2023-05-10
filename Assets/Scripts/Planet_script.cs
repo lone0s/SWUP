@@ -46,6 +46,5 @@ public class Planet_script : MonoBehaviour
         posCam = transform.position;
         posCam.z = transform.position.z + distance * child;
         return posCam;
-        
     }
 }

@@ -171,7 +171,7 @@ public class AttributPanelScript : MonoBehaviour
 
 
 
-    void resetPanel()
+    public void resetPanel()
     {
         foreach(Transform child in transform)
         {
