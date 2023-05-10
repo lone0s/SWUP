@@ -55,7 +55,7 @@ public class Menus_script : MonoBehaviour
             this.clickable.Add(o.name, button);
 
             dropdown.GetComponentInChildren<Text>().text = o.name;
-            dropdown.transform.parent = transform;
+            dropdown.transform.SetParent(transform, false);
             
         }else{
             Button menu = Instantiate(menuPrefab, transform.position, Quaternion.identity);
@@ -64,7 +64,7 @@ public class Menus_script : MonoBehaviour
 
             Text menuText = menu.GetComponentInChildren<Text>();
             menuText.text = o.name;
-            menu.transform.parent = this.transform;
+            menu.transform.SetParent(transform, false);
         }
     }
 }

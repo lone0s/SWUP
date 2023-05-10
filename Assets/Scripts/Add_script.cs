@@ -32,7 +32,7 @@ public class Add_script : MonoBehaviour
         script = parent.GetComponent<AddPrefab_script>();
 
         if (objet == null)
-            Debug.LogError("Tu n'as pas renseigné l'objet à ajouter. Par défaut, ce sera une sphere");
+            Debug.LogWarning("Tu n'as pas renseigné l'objet à ajouter. Par défaut, ce sera une sphere");
     }
 
     // Update is called once per frame
