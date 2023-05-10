@@ -195,7 +195,7 @@ public class OpenFileDialog_Script : MonoBehaviour
         return selectedFile;
     }
     //Pour supprimer la fenetre de dialogue
-    void exit()
+    public void exit()
     {
         Destroy(gameObject);
     }
