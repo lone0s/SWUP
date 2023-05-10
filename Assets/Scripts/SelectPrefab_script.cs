@@ -59,7 +59,7 @@ public class SelectPrefab_script : MonoBehaviour
 
     private System.Collections.IEnumerator WaitForFalse()
     {
-        while (openfile_script.GetIsRun())
+        while (openfile_script.getUserChoiceStatus())
         {
             yield return null;
         }

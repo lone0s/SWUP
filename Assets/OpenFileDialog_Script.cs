@@ -20,7 +20,7 @@ public class OpenFileDialog_Script : MonoBehaviour
     private Image searchPanelSpecialActionIcon;
     private InputField pathText;
     private string selectedFile;
-    private bool isRun = true;
+    private bool userIsChoosingFile = true;
 
     private void Awake()
     {
@@ -149,7 +149,7 @@ public class OpenFileDialog_Script : MonoBehaviour
             {
                 selectedFile = currentPath;
                 hide();
-                isRun = false;
+                userIsChoosingFile = false;
             });
             onClickEventTrigger.triggers.Add(clickEvent);
         }
@@ -205,8 +205,8 @@ public class OpenFileDialog_Script : MonoBehaviour
         return Path.GetDirectoryName(path.TrimEnd(Path.DirectorySeparatorChar));
     }
 
-    public bool GetIsRun()
+    public bool getUserChoiceStatus()
     {
-        return this.isRun;
+        return this.userIsChoosingFile;
     }
 }

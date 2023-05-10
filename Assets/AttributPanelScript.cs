@@ -7,40 +7,26 @@ using UnityEngine.UI;
 
 public class AttributPanelScript : MonoBehaviour
 {
-    // Start is called before the first frame update
-    
     public Type objectType;
     public object objectInstance;
-
     private HashSet<Type> compatibleTypes;
-
-    private int nbFields;
     private FieldInfo[] fields;
     private Type[] fieldTypes;
+
+    bool attributePanelHasElements = false;
 
     void Start()
     {
         compatibleTypes= new HashSet<Type>();
         fillCompatibleTypes();
-        Planet test = new Planet();
-        objectInstance = test;
-        objectType = typeof(Planet);
-        Debug.Log("Type: " + objectType.Name);
-        /*PropertyInfo[] properties = objectType.GetProperties();*/ //<-- Permet de récupérer methodes avec getter + setter
-        fields = objectType.GetFields();
-        fieldTypes = new Type[fields.Length];
-        for(int i = 0; i < fields.Length; i++)
-        {
-            fieldTypes[i] = fields[i].FieldType;
-        }
-        Debug.Log("Nb attributes : "+ fields.Length);
-        foreach (FieldInfo field in fields)
-        {
-            Debug.Log(field.Name + " | " + field.FieldType);
-        }
-        setObjectAttributeValue<float>("radius", 666f);
-        Debug.Log((float)objectType.GetField("radius").GetValue(objectInstance));
+    }
 
+    
+    void initPanel(object objInstance)
+    {
+        this.objectInstance = objInstance;
+        if (attributePanelHasElements)
+            resetPanel();
         insufflatePanel();
     }
 
@@ -57,14 +43,14 @@ public class AttributPanelScript : MonoBehaviour
 
     void insufflatePanel()
     {
-        GameObject troisDPrefab  = Resources.Load<GameObject>("Prefabs/3D_Input");
+        GameObject troisDPrefab = Resources.Load<GameObject>("Prefabs/3D_Input");
         GameObject deuxDPrefab = Resources.Load<GameObject>("Prefabs/2D_Input");
         GameObject unDPrefab = Resources.Load<GameObject>("Prefabs/1D_Input");
-        for(int i = 0; i < fields.Length; ++i)
+        for (int i = 0; i < fields.Length; ++i)
         {
             if (compatibleTypes.Contains(fieldTypes[i]))
             {
-                Debug.Log("Niveau 3 InsufflatPanel atteint");
+
                 if (fieldTypes[i] == typeof(Vector3))
                 {
                     GameObject attributeSubPanel = Instantiate(troisDPrefab, transform);
@@ -96,7 +82,7 @@ public class AttributPanelScript : MonoBehaviour
                     });
                 }
 
-                if(fieldTypes[i] == typeof(Vector2))
+                if (fieldTypes[i] == typeof(Vector2))
                 {
                     GameObject attributeSubPanel = Instantiate(deuxDPrefab, transform);
                     InputField dim1 = attributeSubPanel.transform.Find("dim1/InputDim").GetComponent<InputField>();
@@ -118,15 +104,17 @@ public class AttributPanelScript : MonoBehaviour
                         setObjectAttributeValue(fieldName, vec2);
                     });
                 }
-                if(fieldTypes[i] == typeof(int) ||
+
+                if (fieldTypes[i] == typeof(int) ||
                    fieldTypes[i] == typeof(float) ||
-                   fieldTypes[i] == typeof(double) )
+                   fieldTypes[i] == typeof(double))
                 {
                     GameObject attributeSubPanel = Instantiate(unDPrefab, transform);
                     InputField dim1 = attributeSubPanel.transform.Find("dim1/InputDim").GetComponent<InputField>();
                     Text dimName = attributeSubPanel.transform.Find("dim1/nameDim").GetComponent<Text>();
                     string fieldName = fields[i].Name;
-                    dimName.text = fieldName; 
+                    dimName.text = fieldName;
+
                     if (fieldTypes[i] == typeof(int))
                     {
                         int attributeValue = (int)getObjectAttributeValue(fields[i].Name);
@@ -137,7 +125,8 @@ public class AttributPanelScript : MonoBehaviour
                             setObjectAttributeValue(fieldName, attributeValue);
                         });
                     }
-                    if (fieldTypes[i] == typeof(float)) 
+
+                    if (fieldTypes[i] == typeof(float))
                     {
                         float attributeValue = (float)getObjectAttributeValue(fields[i].Name);
                         dim1.text = attributeValue.ToString();
@@ -147,6 +136,7 @@ public class AttributPanelScript : MonoBehaviour
                             setObjectAttributeValue(fieldName, attributeValue);
                         });
                     }
+
                     if (fieldTypes[i] == typeof(double))
                     {
                         double attributeValue = (double)getObjectAttributeValue(fields[i].Name);
@@ -157,12 +147,24 @@ public class AttributPanelScript : MonoBehaviour
                             setObjectAttributeValue(fieldName, attributeValue);
                         });
                     }
-                    
-                }
 
+                }
+                this.attributePanelHasElements = true;
             }
         }
 
+    }
+
+
+
+
+    void resetPanel()
+    {
+        foreach(Transform child in transform)
+        {
+            Destroy(child.gameObject);
+        }
+            this.attributePanelHasElements = false;
     }
 
     // Update is called once per frame
