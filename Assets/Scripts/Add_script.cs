@@ -47,7 +47,7 @@ public class Add_script : MonoBehaviour
         objet_path = select_script.GetSelectedFile();
 
         GameObject newObjet;
-        if (!objet_path.Equals(""))
+        if (!objet_path.IsUnityNull())
         {
             obj = PrefabUtility.LoadPrefabContents(objet_path);
             newObjet = Instantiate(obj);
