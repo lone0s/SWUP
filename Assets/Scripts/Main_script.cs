@@ -53,11 +53,14 @@ public class Main_script : MonoBehaviour
     }
 
     public void OnClickMenu(string objName){
+        UsableObject obj = this.objects[objName];
         GameObject gObj = GameObject.Find(objName);
         if(gObj != null){
             Camera_script camScript = cam.GetComponent<Camera_script>();
             camScript.MoveToTarget(gObj);
         }
+        AttributPanelScript pScript = GetComponentInChildren<AttributPanelScript>();
+        pScript.initPanel(obj);
         
     }
 

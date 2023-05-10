@@ -17,14 +17,21 @@ public class AttributPanelScript : MonoBehaviour
 
     void Start()
     {
-        compatibleTypes= new HashSet<Type>();
-        fillCompatibleTypes();
     }
 
     
-    void initPanel(object objInstance)
+    public void initPanel(object objInstance)
     {
+        this.compatibleTypes = new HashSet<Type>();
+        fillCompatibleTypes();
         this.objectInstance = objInstance;
+        this.objectType = objInstance.GetType();
+        this.fields = objectType.GetFields();
+        this.fieldTypes = new Type[fields.Length];
+        for (int i = 0; i <  fields.Length; ++i)
+        {
+            fieldTypes[i] = fields[i].FieldType;
+        }
         if (attributePanelHasElements)
             resetPanel();
         insufflatePanel();
@@ -48,6 +55,8 @@ public class AttributPanelScript : MonoBehaviour
         GameObject unDPrefab = Resources.Load<GameObject>("Prefabs/1D_Input");
         for (int i = 0; i < fields.Length; ++i)
         {
+            Debug.Log(compatibleTypes);
+            Debug.Log(fieldTypes[i]);
             if (compatibleTypes.Contains(fieldTypes[i]))
             {
 
@@ -176,7 +185,7 @@ public class AttributPanelScript : MonoBehaviour
     void fillCompatibleTypes()
     {
         Type[] types = {
-                typeof(int), typeof(double),typeof(float), // Types numériques
+                typeof(int), typeof(double),typeof(float), // Types numï¿½riques
                 typeof(Vector2), typeof(Vector3), //Types vecteurs
                 typeof(char), typeof(string) //Types texte
         };
