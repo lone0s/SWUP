@@ -92,10 +92,10 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 9f1539cd694d93b4e9f50966f901708a, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  directoryPath: test.xml
-  fileIconPath: C:\Users\ohno\Downloads\3767084.png
-  folderIconPath: C:\Users\ohno\Downloads\3767084.png
-  goBackIcon: C:\Users\ohno\Downloads\3767084.png
+  directoryPath: Assets/Resources/Prefabs
+  fileIconPath: Assets/Resources/Images/3767084.png
+  folderIconPath: Assets/Resources/Images/3767084.png
+  goBackIcon: Assets/Resources/Images/3767084.png
 --- !u!1001 &2636728377754467046
 PrefabInstance:
   m_ObjectHideFlags: 0

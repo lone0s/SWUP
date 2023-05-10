@@ -18,6 +18,7 @@ public class Planet_script : MonoBehaviour
     void Start()
     {
         this.planet = this.planet != null ? this.planet : new Planet();
+        planet.radius = transform.localScale.x;
         distance *= planet.radius;
     }
 
@@ -46,8 +47,8 @@ public class Planet_script : MonoBehaviour
     internal Vector3 GetPosCam()
     {
         float child = parent != null ? 2 : 1;
-        posCam = gameObject.transform.position;
-        posCam.z = gameObject.transform.position.z + distance * child;
+        posCam = transform.position;
+        posCam.z = transform.position.z + distance * child;
         return posCam;
         
     }

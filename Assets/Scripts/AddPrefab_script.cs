@@ -41,6 +41,6 @@ public class AddPrefab_script : MonoBehaviour
         buttonText.text = name;
         
         // Ajoute le nouvel objet à la hiérarchie en tant qu'enfant de l'objet courant
-        newOnglet.transform.parent = transform;
+        newOnglet.transform.SetParent(transform, false);
     }
 }
