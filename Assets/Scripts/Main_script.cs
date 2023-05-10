@@ -10,7 +10,7 @@ using System.Xml.Serialization;
 
 public class Main_script : MonoBehaviour
 {
-    public Camera camera;
+    public Camera cam;
 
     [SerializeField] private UnityEngine.Object xmlFile;
     public Dictionary<string, UsableObject> objects;
@@ -25,7 +25,7 @@ public class Main_script : MonoBehaviour
 
         foreach (KeyValuePair<string, UsableObject> obj in this.objects)
         {
-            AddPlanet((Planet) obj.Value);
+            AddPlanet((Planet) obj.Value, null);
         }
 
         InitMenus();
@@ -50,13 +50,13 @@ public class Main_script : MonoBehaviour
     public void OnClickMenu(string objName){
         GameObject gObj = GameObject.Find(objName);
         if(gObj != null){
-            Camera_script camScript = camera.GetComponent<Camera_script>();
+            Camera_script camScript = cam.GetComponent<Camera_script>();
             camScript.MoveToTarget(gObj);
         }
         
     }
 
-    public void AddPlanet(Planet p){
+    public void AddPlanet(Planet p, GameObject parent){
         GameObject sphere = GameObject.CreatePrimitive(PrimitiveType.Sphere);
         sphere.name = p.name;
         sphere.transform.position = p.position;
@@ -66,12 +66,21 @@ public class Main_script : MonoBehaviour
         Planet_script script = sphere.GetComponentInChildren<Planet_script>();
         script.planet = p;
 
+        if(parent != null){
+            sphere.transform.SetParent(parent.transform);
+            script.parent = parent;
+        }
+        
+
         Renderer renderer = sphere.GetComponent<Renderer>();
         if (renderer != null)
         {
             renderer.material = Resources.Load<Material>("Materials/" + p.name.ToLower());
         }
 
+        foreach(KeyValuePair<string,UsableObject> child in p.children){
+            AddPlanet((Planet) child.Value, sphere);
+        }
     }
 
     private void InitObjects(string path){
@@ -96,7 +105,7 @@ public class Main_script : MonoBehaviour
         p.name = node.Attributes["name"].Value;
         p.radius = StringToFloat(node.Attributes["radius"].Value);
         p.period = StringToFloat(node.Attributes["period"].Value);
-        p.children = new Dictionary<string, UsableObject>();
+        p.rotation_days = StringToFloat(node.Attributes["rotation_days"].Value);
 
         foreach (XmlNode attr in node.ChildNodes)
         {
@@ -130,15 +139,22 @@ public class Main_script : MonoBehaviour
 
 
 
-public class UsableObject
+public abstract class UsableObject
 {
-    public string name;
-    public Dictionary<string, UsableObject> children;
+    public string name = "Object";
+    public Dictionary<string, UsableObject> children = new Dictionary<string, UsableObject>();
+
+    public abstract string extractXML();
 }
 
 public class Planet : UsableObject
 {
-    public float radius;
-    public float period;
-    public Vector3 position;
+    public float radius = 0.25F;
+    public float period = 365F;
+    public float rotation_days = 1;
+    public Vector3 position = new Vector3(0,0,0);
+
+    public override string extractXML(){
+        return "";
+    }
 }
