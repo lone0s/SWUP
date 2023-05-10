@@ -64,7 +64,7 @@ public class Menus_script : MonoBehaviour
 
             Text menuText = menu.GetComponentInChildren<Text>();
             menuText.text = o.name;
-            menu.transform.parent = transform;
+            menu.transform.parent = this.transform;
         }
     }
 }
