@@ -43,7 +43,7 @@ public class Add_script : MonoBehaviour
 
     private void CreateObject(){
         // Crée un objet avec les propriétés spécifiées
-        GameObject newObjet = (objet == null) ? GameObject.CreatePrimitive(PrimitiveType.Sphere) : objet;
+        GameObject newObjet = (objet == null) ? GameObject.CreatePrimitive(PrimitiveType.Sphere) : GameObject.Instantiate(objet);
 
         newObjet.name = Name_objet;
         newObjet.transform.position = position_objet;
@@ -54,8 +54,7 @@ public class Add_script : MonoBehaviour
             newObjet.AddComponent(script_objet.GetClass());
 
         // Applique la couleur spécifiée au matériau de l'objet
-        Renderer renderer = newObjet.GetComponent<Renderer>();
-        if (renderer != null)
+        if (newObjet.TryGetComponent<Renderer>(out var renderer))
         {
             Material material = renderer.material;
             if (material != null)
