@@ -7,7 +7,7 @@ namespace Assets.DataClasses
     [System.Serializable]
     public class UsableObject
     {
-        public string name;
+        public string name = "Object";
         private string _name;
         
         public Dictionary<string, UsableObject> Children = new ();

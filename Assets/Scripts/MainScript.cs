@@ -21,7 +21,7 @@ namespace Assets.Scripts
             if (jsonFile != null)
             {
                 var jsonPath = AssetDatabase.GetAssetPath(jsonFile);
-                InitObjectsFromJSON(jsonPath);
+                InitObjectsFromJson(jsonPath);
             }
 
             foreach (var obj in _objects)
@@ -50,7 +50,8 @@ namespace Assets.Scripts
 
             foreach (var obj in script.clickable)
             {
-                obj.Value.onClick.AddListener(() => { OnClickMenu(obj.Key); });
+                
+                obj.Value.onClick.AddListener(() => {OnClickMenu(obj.Key); });
             }
         }
 
@@ -90,16 +91,16 @@ namespace Assets.Scripts
 
         private void OnClickMenu(string objName)
         {
-            var obj = FindObject(objName, this._objects);
+            var obj = FindObject(objName, _objects);
             var gObj = GameObject.Find(objName);
             if (gObj != null)
             {
-                Camera_script camScript = Cam.GetComponent<Camera_script>();
+                var camScript = Cam.GetComponent<Camera_script>();
                 camScript.MoveToTarget(gObj);
             }
 
-            AttributPanelScript pScript = GetComponentInChildren<AttributPanelScript>();
-            pScript.function = (arg) =>
+            var pScript = GetComponentInChildren<AttributPanelScript>();
+            pScript.function = arg =>
             {
                 RenderPlanet(arg);
                 return null;
@@ -108,9 +109,9 @@ namespace Assets.Scripts
 
         }
 
-        private void AddPlanet(Planet p, GameObject parent)
+        private void AddPlanet(UsableObject o, GameObject parent)
         {
-            var gObj = RenderPlanet(p);
+            var gObj = RenderPlanet(o);
             var script = gObj.GetComponentInChildren<Planet_script>();
 
             if (parent != null)
@@ -123,25 +124,25 @@ namespace Assets.Scripts
             var objRenderer = gObj.GetComponent<Renderer>();
             if (objRenderer != null)
             {
-                objRenderer.material = Resources.Load<Material>("Materials/" + p.name.ToLower());
+                objRenderer.material = Resources.Load<Material>("Materials/" + o.name.ToLower());
             }
 
-            foreach (KeyValuePair<string, UsableObject> child in p.Children)
+            foreach (KeyValuePair<string, UsableObject> child in o.Children)
             {
                 AddPlanet((Planet)child.Value, gObj);
             }
         }
 
-        private void InitObjectsFromJSON(string path)
+        private void InitObjectsFromJson(string path)
         {
-            string json = File.ReadAllText(path);
+            var json = File.ReadAllText(path);
 
             var settings = new JsonSerializerSettings
             {
-                Converters = { new UsableObjectConverter(typeof(Planet)) }
+                Converters = { new UsableObjectConverter() }
             };
 
-            SolarSystem data = JsonConvert.DeserializeObject<SolarSystem>(json, settings);
+            var data = JsonConvert.DeserializeObject<SolarSystem>(json, settings);
 
             if (data != null)
             {
@@ -152,11 +153,11 @@ namespace Assets.Scripts
             }
         }
 
-        private void SaveObjectsInJSON(string path)
+        private void SaveObjectsInJson(string path)
         {
-            Planet[] data = new Planet[this._objects.Count];
+            var data = new Planet[_objects.Count];
             var idx = 0;
-            foreach (KeyValuePair<string, UsableObject> obj in this._objects)
+            foreach (var obj in _objects)
             {
                 data[idx] = (Planet)obj.Value;
                 idx++;
@@ -167,7 +168,7 @@ namespace Assets.Scripts
                 Converters = { new Vector3Converter() }
             };
 
-            var json = JsonConvert.SerializeObject(data, Newtonsoft.Json.Formatting.Indented, settings);
+            var json = JsonConvert.SerializeObject(data, Formatting.Indented, settings);
             File.WriteAllText(path, json);
         }
 
@@ -177,7 +178,6 @@ namespace Assets.Scripts
             {
                 return dict[key];
             }
-            else
             {
                 foreach (UsableObject child in dict.Values)
                 {

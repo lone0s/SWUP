@@ -10,13 +10,6 @@ namespace Assets.DataClasses
     public class UsableObjectConverter : JsonConverter
     {
 
-        private readonly Type _objType;
-
-        public UsableObjectConverter(Type t)
-        {
-            _objType = t;
-        }
-
         public override bool CanConvert(Type objectType)
         {
             return objectType == typeof(UsableObject);
@@ -25,12 +18,7 @@ namespace Assets.DataClasses
         public override object ReadJson(JsonReader reader, Type objectType, object existingValue,JsonSerializer serializer)
         {
             var obj = JObject.Load(reader);
-            dynamic result = Convert.ChangeType(existingValue, this._objType);
-
-            if (result == null)
-            {
-                result = (Planet)existingValue ?? new Planet();
-            }
+            var result = (Planet) existingValue ?? new Planet();
 
             serializer.Populate(obj.CreateReader(), result);
 
