@@ -52,12 +52,21 @@ public class Main_script : MonoBehaviour
         }
     }
 
-    public void renderPlanet(object obj){
+    public GameObject renderPlanet(object obj){
         Planet p = (Planet) obj;
         GameObject gObj = GameObject.Find(p.name);
+        if(gObj == null){
+            gObj = GameObject.CreatePrimitive(PrimitiveType.Sphere);
+            gObj.AddComponent<Planet_script>();
+            Planet_script script = gObj.GetComponentInChildren<Planet_script>();
+            script.planet = p;
+        }
 
+        gObj.name = p.name;
         gObj.transform.position = p.position;
         gObj.transform.localScale = new Vector3(p.radius, p.radius, p.radius);
+
+        return gObj;
     }
 
     public void OnClickMenu(string objName){
@@ -74,29 +83,23 @@ public class Main_script : MonoBehaviour
     }
 
     public void AddPlanet(Planet p, GameObject parent){
-        GameObject sphere = GameObject.CreatePrimitive(PrimitiveType.Sphere);
-        sphere.name = p.name;
-        sphere.transform.position = p.position;
-        sphere.transform.localScale = new Vector3(p.radius, p.radius, p.radius);
-
-        sphere.AddComponent<Planet_script>();
-        Planet_script script = sphere.GetComponentInChildren<Planet_script>();
-        script.planet = p;
+        GameObject gObj = this.renderPlanet(p);
+        Planet_script script = gObj.GetComponentInChildren<Planet_script>();
 
         if(parent != null){
-            sphere.transform.SetParent(parent.transform);
+            gObj.transform.SetParent(parent.transform);
             script.parent = parent;
         }
         
 
-        Renderer renderer = sphere.GetComponent<Renderer>();
+        Renderer renderer = gObj.GetComponent<Renderer>();
         if (renderer != null)
         {
             renderer.material = Resources.Load<Material>("Materials/" + p.name.ToLower());
         }
 
         foreach(KeyValuePair<string,UsableObject> child in p.children){
-            AddPlanet((Planet) child.Value, sphere);
+            AddPlanet((Planet) child.Value, gObj);
         }
     }
 
