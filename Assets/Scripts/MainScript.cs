@@ -95,6 +95,7 @@ namespace Assets.Scripts
             var gObj = GameObject.Find(objName);
             if (gObj != null)
             {
+                //Debug.Log(gobj);
                 var camScript = Cam.GetComponent<Camera_script>();
                 camScript.MoveToTarget(gObj);
             }
