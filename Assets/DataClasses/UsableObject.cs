@@ -30,7 +30,7 @@ namespace Assets.DataClasses
         public float rotation_days = 1;
         public Vector3 position = new (0,0,0);
 
-        public Material material;
+        public Material material = new Material(Shader.Find("Standard"));
     }
 
 
