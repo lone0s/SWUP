@@ -70,6 +70,7 @@ namespace Assets.Scripts
                 }
 
                 {
+                    GameObject.Find(p.GetOldName()).name = p.name;
                     _objects.Remove(p.GetOldName());
                     _objects.Add(p.name, p);
                     p.UpdateOldName();
@@ -77,13 +78,6 @@ namespace Assets.Scripts
             }
             
             var gObj = GameObject.Find(p.name);
-            if (gObj == null)
-            {
-                gObj = GameObject.CreatePrimitive(PrimitiveType.Sphere);
-                gObj.AddComponent<Planet_script>();
-                var script = gObj.GetComponentInChildren<Planet_script>();
-                script.planet = p;
-            }
             
             gObj.transform.position = p.position;
             gObj.transform.localScale = new Vector3(p.radius, p.radius, p.radius);
@@ -97,29 +91,29 @@ namespace Assets.Scripts
             var gObj = GameObject.Find(objName);
             if (gObj != null)
             {
-                Debug.Log(objName);
                 var camScript = Cam.GetComponent<Camera_script>();
                 camScript.MoveToTarget(gObj);
-            }
-            else
-            {
-                Debug.LogWarning(objName);
             }
 
             var pScript = GetComponentInChildren<AttributPanelScript>();
             pScript.function = arg =>
             {
                 RenderPlanet(arg);
+                InitMenus();
                 return null;
             };
             pScript.initPanel(obj);
-
         }
 
         private void AddPlanet(Planet p, GameObject parent)
         {
-            var gObj = RenderPlanet(p);
+            
+            var gObj = GameObject.CreatePrimitive(PrimitiveType.Sphere);
+            gObj.name = p.name;
+            gObj.AddComponent<Planet_script>();
             var script = gObj.GetComponentInChildren<Planet_script>();
+            script.planet = p;
+            RenderPlanet(p);
 
             if (parent != null)
             {
