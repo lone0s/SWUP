@@ -1,6 +1,7 @@
 using System;
 using System.Collections;
 using System.Collections.Generic;
+using System.Globalization;
 using System.Reflection;
 using UnityEngine;
 using UnityEngine.UI;
@@ -17,10 +18,24 @@ public class AttributPanelScript : MonoBehaviour
 
     bool attributePanelHasElements = false;
 
+    char correctNumberDecimalSeparator;
+    char incorrectNumberDecimalSeparator;
+
     private void Awake()
     {
         this.compatibleTypes = new HashSet<Type>();
         fillCompatibleTypes();
+        setCorrectAndIncorrectDecimalSeparators();
+    }
+
+    private void setCorrectAndIncorrectDecimalSeparators()
+    {
+        Char[] buffer = CultureInfo.CurrentCulture.NumberFormat.NumberDecimalSeparator.ToCharArray();
+        correctNumberDecimalSeparator = buffer[0];
+        incorrectNumberDecimalSeparator =
+            correctNumberDecimalSeparator == ',' ?
+                '.' :
+                ',';
     }
 
     void Start()
@@ -51,13 +66,23 @@ public class AttributPanelScript : MonoBehaviour
     {
         objectType.GetField(fieldName).SetValue(objectInstance, fieldValue);
     }
-
+   
     object getObjectAttributeValue(string fieldName)
     {
         object fieldValue = objectType.GetField(fieldName).GetValue(objectInstance);
         return fieldValue;
     }
 
+    public static string correctDecimalSeparator(string str, char correctDecimalSep, char incorrectDecimalSep)
+    {
+        if (str.Contains(incorrectDecimalSep))
+        {
+            return str.Replace(incorrectDecimalSep, correctDecimalSep);
+        }
+        return str;
+    }
+
+    /* /!\ Penser a faire un try cast et en cas de catch, juste remplacer le mauvais char /!\ */
     void insufflatePanel()
     {
         GameObject troisDPrefab = Resources.Load<GameObject>("Prefabs/3D_Input");
@@ -84,21 +109,24 @@ public class AttributPanelScript : MonoBehaviour
                     string fieldName = fields[i].Name;
                     dim1.onEndEdit.AddListener((value) =>
                     {
-                        vec3.x = float.Parse(value);
+                        string val = correctDecimalSeparator(value, correctNumberDecimalSeparator, incorrectNumberDecimalSeparator);
+                        vec3.x = float.Parse(val);
                         setObjectAttributeValue(fieldName, vec3);
                         callFunction();
                     });
 
                     dim2.onEndEdit.AddListener((value) =>
                     {
-                        vec3.y = float.Parse(value);
+                        string val = correctDecimalSeparator(value, correctNumberDecimalSeparator, incorrectNumberDecimalSeparator);
+                        vec3.y = float.Parse(val);
                         setObjectAttributeValue(fieldName, vec3);
                         callFunction();
                     });
 
                     dim3.onEndEdit.AddListener((value) =>
                     {
-                        vec3.z = float.Parse(value);
+                        string val = correctDecimalSeparator(value, correctNumberDecimalSeparator, incorrectNumberDecimalSeparator);
+                        vec3.z = float.Parse(val);
                         setObjectAttributeValue(fieldName, vec3);
                         callFunction();
                     });
@@ -116,14 +144,16 @@ public class AttributPanelScript : MonoBehaviour
                     string fieldName = fields[i].Name;
                     dim1.onEndEdit.AddListener((value) =>
                     {
-                        vec2.x = float.Parse(value);
+                        string val = correctDecimalSeparator(value, correctNumberDecimalSeparator, incorrectNumberDecimalSeparator);
+                        vec2.x = float.Parse(val);
                         setObjectAttributeValue(fieldName, vec2);
                         callFunction();
                     });
 
                     dim2.onEndEdit.AddListener((value) =>
                     {
-                        vec2.y = float.Parse(value);
+                        string val = correctDecimalSeparator(value, correctNumberDecimalSeparator, incorrectNumberDecimalSeparator);
+                        vec2.y = float.Parse(val);
                         setObjectAttributeValue(fieldName, vec2);
                         callFunction();
                     });
@@ -131,7 +161,10 @@ public class AttributPanelScript : MonoBehaviour
 
                 if (fieldTypes[i] == typeof(int) ||
                    fieldTypes[i] == typeof(float) ||
-                   fieldTypes[i] == typeof(double))
+                   fieldTypes[i] == typeof(double) ||
+                   fieldTypes[i] == typeof(string) ||
+                   fieldTypes[i] == typeof(char))
+
                 {
                     GameObject attributeSubPanel = Instantiate(unDPrefab, transform);
                     InputField dim1 = attributeSubPanel.transform.Find("dim1/InputDim").GetComponent<InputField>();
@@ -157,7 +190,8 @@ public class AttributPanelScript : MonoBehaviour
                         dim1.text = attributeValue.ToString();
                         dim1.onEndEdit.AddListener((value) =>
                         {
-                            attributeValue = float.Parse(value);
+                            string val = correctDecimalSeparator(value, correctNumberDecimalSeparator, incorrectNumberDecimalSeparator);
+                            attributeValue = float.Parse(val);
                             setObjectAttributeValue(fieldName, attributeValue);
                             callFunction();
                         });
@@ -169,12 +203,36 @@ public class AttributPanelScript : MonoBehaviour
                         dim1.text = attributeValue.ToString();
                         dim1.onEndEdit.AddListener((value) =>
                         {
-                            attributeValue = double.Parse(value);
+                            string val = correctDecimalSeparator(value, correctNumberDecimalSeparator, incorrectNumberDecimalSeparator);
+                            attributeValue = double.Parse(val);
                             setObjectAttributeValue(fieldName, attributeValue);
                             callFunction();
                         });
                     }
 
+                    if (fieldTypes[i] == typeof(char))
+                    {
+                        char attributeValue = (char)getObjectAttributeValue(fields[i].Name);
+                        dim1.characterLimit = 1;
+                        dim1.text = attributeValue.ToString();
+                        dim1.onEndEdit.AddListener((value) =>
+                        {
+                            attributeValue = char.Parse(value);
+                            setObjectAttributeValue(fieldName, attributeValue);
+                            callFunction();
+                        });
+                    }
+                    if (fieldTypes[i] == typeof(String))
+                    {
+                        string attributeValue = getObjectAttributeValue(fields[i].Name).ToString();
+                        dim1.text = attributeValue;
+                        dim1.onEndEdit.AddListener((value) =>
+                        {
+                            attributeValue = value;
+                            setObjectAttributeValue(fieldName, attributeValue);
+                            callFunction();
+                        });
+                    }
                 }
                 this.attributePanelHasElements = true;
             }
