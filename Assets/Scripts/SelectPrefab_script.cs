@@ -1,7 +1,3 @@
-using System.Collections;
-using System.Collections.Generic;
-using Unity.VisualScripting;
-using UnityEditor;
 using UnityEngine;
 using UnityEngine.UI;
 
@@ -22,7 +18,6 @@ public class SelectPrefab_script : MonoBehaviour
         button = GetComponent<Button>();
         button.onClick.AddListener(() =>
         {
-            switchImageStateOfPanels();
             insufflateOpenFileDialogPrefab();
             StartCoroutine(WaitForFalse());
         });
@@ -49,6 +44,7 @@ public class SelectPrefab_script : MonoBehaviour
         openfile_script = openFileDialog.GetComponent<OpenFileDialog_Script>();
     }
 
+    //Useless, not used anymore
     void switchImageStateOfPanels()
     {
         foreach (Image panel in panels)
@@ -64,8 +60,6 @@ public class SelectPrefab_script : MonoBehaviour
             yield return null;
         }
         selectedFile = openfile_script.getPathOfSelectedFile();
-        Debug.Log("Received filepath : " + selectedFile);
-        switchImageStateOfPanels();
         openfile_script.exit();
     }
 

@@ -13,11 +13,13 @@ public class OpenFileDialog_Script : MonoBehaviour
     public string fileIconPath;
     public string folderIconPath;
     public string goBackIcon;
+    public string exitIcon;
 
     private Transform viewPanelTransform;
     private ViewPanel_Script viewPanelScript;
     private int nbElementsInTargetFolder;
     private Image searchPanelSpecialActionIcon;
+    private Image searchPanelSpecialActionIcon2;
     private InputField pathText;
     private string selectedFile;
     private bool userIsChoosingFile = true;
@@ -44,14 +46,25 @@ public class OpenFileDialog_Script : MonoBehaviour
     {
         directoryPath = Path.Combine(Application.dataPath, "Resources");
         searchPanelSpecialActionIcon = GameObject.Find("SearchPanel/SpecialActionIcon").GetComponent<Image>();
-        Debug.Log(searchPanelSpecialActionIcon.name);
+        searchPanelSpecialActionIcon2 = GameObject.Find("SearchPanel/SpecialActionIcon2").GetComponent<Image>();
         float width, height;
         ImagedText_Script.getWidthHeightOfImg(searchPanelSpecialActionIcon, out width, out height);
         searchPanelSpecialActionIcon.sprite = ImagedText_Script.makeSpriteOfPngFile(goBackIcon, width, height);
+        ImagedText_Script.getWidthHeightOfImg(searchPanelSpecialActionIcon2, out width, out height);
+        searchPanelSpecialActionIcon2.sprite = ImagedText_Script.makeSpriteOfPngFile(exitIcon, width, height);
         pathText = GameObject.Find("SearchPanel/PathInput/Path/InputDim").GetComponent<InputField>();
         pathText.text = correctPathString(directoryPath);
-
         insufflateLines();
+        EventTrigger exitImgTrigger = searchPanelSpecialActionIcon2.gameObject.AddComponent<EventTrigger>();
+        EventTrigger.Entry exitEntry = new EventTrigger.Entry();
+        exitEntry.eventID = EventTriggerType.PointerClick;
+        exitEntry.callback.AddListener((data) =>
+        {
+            selectedFile = "";
+            exit();
+        });
+        exitImgTrigger.triggers.Add(exitEntry);
+
         EventTrigger imgTrigger = searchPanelSpecialActionIcon.gameObject.AddComponent<EventTrigger>();
         EventTrigger.Entry imgTriggerEntry = new EventTrigger.Entry();
         imgTriggerEntry.eventID = EventTriggerType.PointerClick;
