@@ -3,7 +3,9 @@ using System.Collections;
 using System.Collections.Generic;
 using System.Globalization;
 using System.Reflection;
+using Unity.VisualScripting;
 using UnityEngine;
+using UnityEngine.EventSystems;
 using UnityEngine.UI;
 
 public class AttributPanelScript : MonoBehaviour
@@ -18,14 +20,17 @@ public class AttributPanelScript : MonoBehaviour
 
     bool attributePanelHasElements = false;
 
-    char correctNumberDecimalSeparator;
-    char incorrectNumberDecimalSeparator;
+    private char correctNumberDecimalSeparator;
+    private char incorrectNumberDecimalSeparator;
+
+    private string selectedFile;
 
     private void Awake()
     {
         this.compatibleTypes = new HashSet<Type>();
         fillCompatibleTypes();
         setCorrectAndIncorrectDecimalSeparators();
+
     }
 
     private void setCorrectAndIncorrectDecimalSeparators()
@@ -88,13 +93,11 @@ public class AttributPanelScript : MonoBehaviour
         GameObject troisDPrefab = Resources.Load<GameObject>("Prefabs/3D_Input");
         GameObject deuxDPrefab = Resources.Load<GameObject>("Prefabs/2D_Input");
         GameObject unDPrefab = Resources.Load<GameObject>("Prefabs/1D_Input");
+
         for (int i = 0; i < fields.Length; ++i)
         {
-            Debug.Log(compatibleTypes);
-            Debug.Log(fieldTypes[i]);
             if (compatibleTypes.Contains(fieldTypes[i]))
             {
-
                 if (fieldTypes[i] == typeof(Vector3))
                 {
                     GameObject attributeSubPanel = Instantiate(troisDPrefab, transform);
@@ -234,6 +237,29 @@ public class AttributPanelScript : MonoBehaviour
                         });
                     }
                 }
+                if (fieldTypes[i] == typeof(Material))
+                {
+                    GameObject objToShowTextureLive = new GameObject("TextureObject");
+                    Image imgToShowTextureLive = objToShowTextureLive.AddComponent<Image>();
+                    Material attributeMaterial = (Material)getObjectAttributeValue(fields[i].Name);
+                    Debug.Log("Material Name : " + attributeMaterial.name);
+                    Texture2D attributeTexture = (Texture2D)attributeMaterial.mainTexture;
+                    int textureWidth = attributeTexture.width;
+                    int textureHeight = attributeTexture.height;
+                    Sprite attributeSprite = Sprite.Create(attributeTexture, new Rect(0, 0, textureWidth, textureHeight), Vector2.zero);
+                    imgToShowTextureLive.sprite = attributeSprite;
+                    objToShowTextureLive.transform.SetParent(transform);
+                    string fieldName = fields[i].Name;
+                    EventTrigger imgTrigger = imgToShowTextureLive.AddComponent<EventTrigger>();
+                    EventTrigger.Entry imgEntry = new EventTrigger.Entry();
+                    imgEntry.eventID = EventTriggerType.PointerClick;
+                    object[] neededParams = { attributeTexture, attributeMaterial, fieldName };
+                    imgEntry.callback.AddListener((data) =>
+                    {
+                        StartCoroutine(WaitForUpdate(neededParams));
+                    });
+                    imgTrigger.triggers.Add(imgEntry);
+                }
                 this.attributePanelHasElements = true;
             }
         }
@@ -241,6 +267,31 @@ public class AttributPanelScript : MonoBehaviour
     }
 
 
+
+    private System.Collections.IEnumerator WaitForUpdate(object[] neededParams)
+    {
+        Texture2D attributeTexture = (Texture2D)neededParams[0];
+        Material attributeMaterial = (Material)neededParams[1];
+        string fieldName = (string)neededParams[2];
+        GameObject OpenFileDialogPrefab = Resources.Load<GameObject>("Prefabs/OpenFileDialog");
+        Canvas rootCanvas = FindObjectOfType<Canvas>();
+        GameObject openFileDialog = Instantiate(OpenFileDialogPrefab, rootCanvas.transform);
+        OpenFileDialog_Script ofdScript = openFileDialog.GetComponent<OpenFileDialog_Script>();
+        ofdScript.setFileFilter("png");
+        while (ofdScript.getUserChoiceStatus())
+        {
+            yield return null;
+        }
+        selectedFile = ofdScript.getPathOfSelectedFile();
+        if (selectedFile != null)
+        {
+            ofdScript.exit();
+            byte[] imgData = System.IO.File.ReadAllBytes(selectedFile);
+            attributeTexture.LoadImage(imgData);
+            attributeMaterial.mainTexture = attributeTexture;
+        }
+        setObjectAttributeValue(fieldName, attributeMaterial);
+    }
 
 
     public void resetPanel()
@@ -263,7 +314,8 @@ public class AttributPanelScript : MonoBehaviour
         Type[] types = {
                 typeof(int), typeof(double),typeof(float), // Types num�riques
                 typeof(Vector2), typeof(Vector3), //Types vecteurs
-                typeof(char), typeof(string) //Types texte
+                typeof(char), typeof(string), //Types texte
+                typeof(Material) //Type pas comme les autres 
         };
 
         foreach(Type type in types)
