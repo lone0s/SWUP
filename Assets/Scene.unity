@@ -434,7 +434,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 55e9334edabd009f1b8c4cf4231d2377, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  Cam: {fileID: 0}
+  Cam: {fileID: 891078109}
   jsonFile: {fileID: 4900000, guid: 71543b761ff9334b4bd4a83a8fee1b2d, type: 3}
 --- !u!1 &290344294
 GameObject:
