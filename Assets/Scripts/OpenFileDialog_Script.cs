@@ -2,6 +2,7 @@ using System.IO;
 using UnityEngine;
 using UnityEngine.UI;
 using UnityEngine.EventSystems;
+using System.Linq;
 
 public class OpenFileDialog_Script : MonoBehaviour
 {
@@ -24,8 +25,12 @@ public class OpenFileDialog_Script : MonoBehaviour
     private string selectedFile;
     private bool userIsChoosingFile = true;
 
+    private string fileFilterFormat;
+    private bool triggerFileFilter = false;
+    private bool triggerMetaFileFilter = true;
+
     private void Awake()
-    {
+    { 
         directoryPath = Path.Combine(Application.dataPath, "Resources");
         updateFilesAndDirectories(directoryPath);
         setNbElementsInFolder();
@@ -113,8 +118,18 @@ public class OpenFileDialog_Script : MonoBehaviour
 
     void updateFilesAndDirectories(string path)
     {
+        
         files = Directory.GetFiles(path);
         subdirectories = Directory.GetDirectories(path);
+        
+        if(triggerFileFilter)
+        {
+            files = files.Where(file => file.EndsWith(fileFilterFormat)).ToArray();
+        }
+        if(triggerMetaFileFilter)
+        {
+            files = files.Where(file => (!file.Contains(".meta"))).ToArray();
+        }
         setNbElementsInFolder();
 
         int pathLength = path.Length;
@@ -220,5 +235,21 @@ public class OpenFileDialog_Script : MonoBehaviour
     public bool getUserChoiceStatus()
     {
         return this.userIsChoosingFile;
+    }
+
+    public void setFileFilter(string fileFormat)
+    {
+        triggerFileFilter = true;
+        fileFilterFormat = fileFormat.Contains(".") ? fileFormat : "." + fileFormat;
+    }
+    public void setMetaFilter()
+    {
+        triggerMetaFileFilter = true;
+    }
+    private void resetFilters()
+    {
+        triggerFileFilter = false;
+        triggerMetaFileFilter = false;
+        fileFilterFormat = null;
     }
 }
