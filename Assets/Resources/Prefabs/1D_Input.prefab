@@ -240,6 +240,22 @@ PrefabInstance:
       propertyPath: m_AnchoredPosition.y
       value: 0
       objectReference: {fileID: 0}
+    - target: {fileID: 8700357505121502193, guid: 9b6cdb229b47f3d47a43b91430e88df4, type: 3}
+      propertyPath: m_FontData.m_MinSize
+      value: 2
+      objectReference: {fileID: 0}
+    - target: {fileID: 8700357505121502193, guid: 9b6cdb229b47f3d47a43b91430e88df4, type: 3}
+      propertyPath: m_FontData.m_FontSize
+      value: 22
+      objectReference: {fileID: 0}
+    - target: {fileID: 8902570034808838480, guid: 9b6cdb229b47f3d47a43b91430e88df4, type: 3}
+      propertyPath: m_MinHeight
+      value: 30
+      objectReference: {fileID: 0}
+    - target: {fileID: 8902570034808838480, guid: 9b6cdb229b47f3d47a43b91430e88df4, type: 3}
+      propertyPath: m_PreferredHeight
+      value: 30
+      objectReference: {fileID: 0}
     - target: {fileID: 9060166943390708296, guid: 9b6cdb229b47f3d47a43b91430e88df4, type: 3}
       propertyPath: m_AnchorMax.y
       value: 0
