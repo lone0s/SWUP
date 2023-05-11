@@ -1,10 +1,10 @@
-using System;
-using System.Collections;
-using System.Collections.Generic;
-using Unity.VisualScripting;
 using UnityEngine;
-using static UnityEngine.GraphicsBuffer;
+using Assets.DataClasses;
 
+namespace Assets.Script
+{
+    
+}
 public class Planet_script : MonoBehaviour
 {
 
@@ -17,13 +17,11 @@ public class Planet_script : MonoBehaviour
 
     void Start()
     {
-        this.planet = this.planet != null ? this.planet : new Planet();
-        
-        //distance *= planet.radius;
+        planet = planet != null ? planet : new Planet();
     }
 
     void FixedUpdate(){
-        float timeFullRotation =  timeFullRotationEarth * this.planet.period / 365;// La terre fait une rotation complète en 10s, les autres planètes scale en fonction
+        float timeFullRotation =  timeFullRotationEarth * planet.period / 365;// La terre fait une rotation complète en 10s, les autres planètes scale en fonction
         float fullRotationSpeed = timeFullRotation != 0 ? 360 / timeFullRotation : 0; // degrées par seconde
 
         float timeAxisRotation = timeAxisRotationEarth * this.planet.rotation_days / 365;

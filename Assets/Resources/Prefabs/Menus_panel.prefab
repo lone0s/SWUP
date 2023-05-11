@@ -108,11 +108,11 @@ MonoBehaviour:
   m_GameObject: {fileID: 7686043471114939512}
   m_Enabled: 1
   m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: f71de4d46c0a2df78b3e1b8a129158ba, type: 3}
+  m_Script: {fileID: 11500000, guid: e0bc824d528794c9a83266de4d46e333, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  menuPrefab: {fileID: 763231781608890398, guid: 88212dc9cc30a5615a9d81312c3289ef, type: 3}
-  dropdownPrefab: {fileID: 5081669601795342460, guid: a64d5da22168dd2faa6ec3c6146f71f1, type: 3}
+  MenuPrefab: {fileID: 763231781608890398, guid: 88212dc9cc30a5615a9d81312c3289ef, type: 3}
+  DropdownPrefab: {fileID: 5081669601795342460, guid: a64d5da22168dd2faa6ec3c6146f71f1, type: 3}
 --- !u!114 &7686043471114939506
 MonoBehaviour:
   m_ObjectHideFlags: 0
