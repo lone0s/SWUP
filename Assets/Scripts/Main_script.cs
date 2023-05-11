@@ -52,14 +52,23 @@ public class Main_script : MonoBehaviour
         }
     }
 
+    public void renderPlanet(object obj){
+        Planet p = (Planet) obj;
+        GameObject gObj = GameObject.Find(p.name);
+
+        gObj.transform.position = p.position;
+        gObj.transform.localScale = new Vector3(p.radius, p.radius, p.radius);
+    }
+
     public void OnClickMenu(string objName){
-        UsableObject obj = this.objects[objName];
+        UsableObject obj = FindObject(objName, this.objects);
         GameObject gObj = GameObject.Find(objName);
         if(gObj != null){
             Camera_script camScript = cam.GetComponent<Camera_script>();
             camScript.MoveToTarget(gObj);
         }
         AttributPanelScript pScript = GetComponentInChildren<AttributPanelScript>();
+        pScript.function = (arg) => {renderPlanet(arg); return null;};
         pScript.initPanel(obj);
         
     }
@@ -122,6 +131,20 @@ public class Main_script : MonoBehaviour
         
         string json = JsonConvert.SerializeObject(data, Newtonsoft.Json.Formatting.Indented, settings);
         File.WriteAllText(path, json);
+    }
+
+    public static UsableObject FindObject(string key, Dictionary<string, UsableObject> dict) {
+        if (dict.ContainsKey(key)) {
+            return dict[key];
+        } else {
+            foreach (UsableObject child in dict.Values) {
+                UsableObject result = FindObject(key, child.children);
+                if (result != null) {
+                    return result;
+                }
+            }
+            return null;
+        }
     }
 }
 

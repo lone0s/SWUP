@@ -13,6 +13,8 @@ public class AttributPanelScript : MonoBehaviour
     private FieldInfo[] fields;
     private Type[] fieldTypes;
 
+    public Func<object, object> function;
+
     bool attributePanelHasElements = false;
 
     private void Awake()
@@ -23,6 +25,10 @@ public class AttributPanelScript : MonoBehaviour
 
     void Start()
     {
+    }
+
+    void callFunction(){
+        if(this.function != null) this.function.Invoke(this.objectInstance);
     }
 
     
@@ -80,18 +86,21 @@ public class AttributPanelScript : MonoBehaviour
                     {
                         vec3.x = float.Parse(value);
                         setObjectAttributeValue(fieldName, vec3);
+                        callFunction();
                     });
 
                     dim2.onEndEdit.AddListener((value) =>
                     {
                         vec3.y = float.Parse(value);
                         setObjectAttributeValue(fieldName, vec3);
+                        callFunction();
                     });
 
                     dim3.onEndEdit.AddListener((value) =>
                     {
                         vec3.z = float.Parse(value);
                         setObjectAttributeValue(fieldName, vec3);
+                        callFunction();
                     });
                 }
 
@@ -109,12 +118,14 @@ public class AttributPanelScript : MonoBehaviour
                     {
                         vec2.x = float.Parse(value);
                         setObjectAttributeValue(fieldName, vec2);
+                        callFunction();
                     });
 
                     dim2.onEndEdit.AddListener((value) =>
                     {
                         vec2.y = float.Parse(value);
                         setObjectAttributeValue(fieldName, vec2);
+                        callFunction();
                     });
                 }
 
@@ -136,6 +147,7 @@ public class AttributPanelScript : MonoBehaviour
                         {
                             attributeValue = int.Parse(value);
                             setObjectAttributeValue(fieldName, attributeValue);
+                            callFunction();
                         });
                     }
 
@@ -147,6 +159,7 @@ public class AttributPanelScript : MonoBehaviour
                         {
                             attributeValue = float.Parse(value);
                             setObjectAttributeValue(fieldName, attributeValue);
+                            callFunction();
                         });
                     }
 
@@ -158,6 +171,7 @@ public class AttributPanelScript : MonoBehaviour
                         {
                             attributeValue = double.Parse(value);
                             setObjectAttributeValue(fieldName, attributeValue);
+                            callFunction();
                         });
                     }
 
