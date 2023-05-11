@@ -1,6 +1,7 @@
 using System;
 using System.Collections;
 using System.Collections.Generic;
+using Assets.DataClasses;
 using Unity.VisualScripting;
 using UnityEngine;
 using UnityEngine.UI;
@@ -27,7 +28,7 @@ public class AddPrefab_script : MonoBehaviour
         
     }
 
-    public void AddPrefab(string name, GameObject objet){
+    public void AddPrefab(UsableObject uObj, GameObject objet){
        
         // Instancie le prefab à la position de l'objet courant
         GameObject newOnglet = Instantiate(prefab, transform.position, Quaternion.identity);
@@ -39,7 +40,7 @@ public class AddPrefab_script : MonoBehaviour
 
         // Met à jour le texte du bouton
         Text buttonText = newOnglet.GetComponentInChildren<Text>();
-        buttonText.text = name;
+        buttonText.text = uObj.name;
         
         // Ajoute le nouvel objet à la hiérarchie en tant qu'enfant de l'objet courant
         newOnglet.transform.SetParent(transform, false);

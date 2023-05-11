@@ -14,7 +14,7 @@ namespace Assets.Scripts
         void Start()
         {
             script = GetComponentInParent<MenusScript>();
-            function = script.function;
+            function = script.Function;
         }
 
         public void OnClickItem()

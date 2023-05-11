@@ -5,6 +5,7 @@ using System.IO;
 
 using Newtonsoft.Json;
 using Assets.DataClasses;
+using Unity.VisualScripting;
 using Object = UnityEngine.Object;
 
 namespace Assets.Scripts
@@ -30,6 +31,7 @@ namespace Assets.Scripts
             }
 
             InitMenus();
+            InitAddPanel();
         }
 
         private void Update()
@@ -39,9 +41,9 @@ namespace Assets.Scripts
 
         private void InitMenus()
         {
-            MenusScript script = gameObject.GetComponentInChildren<MenusScript>();
+            var script = gameObject.GetComponentInChildren<MenusScript>();
             script.menus = _objects;
-            script.function = arg =>
+            script.Function = arg =>
             {
                OnClickMenu(arg);
                return null;
@@ -53,6 +55,20 @@ namespace Assets.Scripts
                 
                 obj.Value.onClick.AddListener(() => {OnClickMenu(obj.Key); });
             }
+        }
+
+        private void InitAddPanel()
+        {
+            var script = gameObject.GetComponentInChildren<Add_script>();
+            script.FunctionUObj = gObj =>
+            {
+                var p = new Planet();
+                gObj.AddComponent<Planet_script>();
+                gObj.GetComponent<Renderer>().material = p.material;
+                var scriptObj = gObj.GetComponent<Planet_script>();
+                scriptObj.planet = p;
+                return p;
+            };
         }
 
         private GameObject RenderPlanet(object obj)
@@ -193,5 +209,34 @@ namespace Assets.Scripts
                 return null;
             }
         }
+        
+        private const string Path = "Assets/Resources/Out";
+
+        private void OnDestroy()
+        {
+            DeleteFolderContents(Path);
+        }
+
+        private static void DeleteFolderContents(string path)
+        {
+            if (Directory.Exists(path))
+            {
+                var files = Directory.GetFiles(path);
+                var directories = Directory.GetDirectories(path);
+
+                foreach (var file in files)
+                {
+                    File.Delete(file);
+                }
+
+                foreach (var directory in directories)
+                {
+                    DeleteFolderContents(directory);
+                    Directory.Delete(directory);
+                }
+            }
+        }
     }
+    
+    
 }

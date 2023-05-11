@@ -17,12 +17,12 @@ public class Onglet_script : MonoBehaviour
     // Start is called before the first frame update
     void Start()
     {
-        // Récupérer la référence au bouton
+        // Recuper la reference au bouton
         mainButton = GetComponent<Button>();
 
         attribut_script = GameObject.Find("Attribut_panel").GetComponent<AttributPanelScript>();
 
-        // Ajouter la méthode onClick au bouton
+        // Ajouter la mï¿½thode onClick au bouton
         mainButton.onClick.AddListener(MyOnClickMethod);
 
         deleteButton = this.transform.Find("Close_btn").GetComponent<Button>();

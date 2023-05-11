@@ -1,5 +1,7 @@
+using System;
 using System.Collections;
 using System.Collections.Generic;
+using Assets.DataClasses;
 using Unity.VisualScripting;
 using UnityEditor;
 using UnityEngine;
@@ -12,6 +14,8 @@ public class Add_script : MonoBehaviour
     private SelectPrefab_script select_script;
     private Button addButton;
     private string objet_path = "";
+
+    public Func<GameObject,UsableObject> FunctionUObj;
 
     //Parametre object
     private GameObject obj;
@@ -58,13 +62,13 @@ public class Add_script : MonoBehaviour
         }
         
 
-        newObjet.name = name_objet;
+        //newObjet.name = name_objet;
         newObjet.transform.position = position_objet;
         newObjet.transform.localScale = new Vector3(size_objet, size_objet, size_objet);
 
         // Ajouter le un script à l'objet
-        if(script_objet != null)
-            newObjet.AddComponent(script_objet.GetClass());
+        // if(script_objet != null)
+        //     newObjet.AddComponent(script_objet.GetClass());
 
         // Applique la couleur spécifiée au matériau de l'objet
         if (newObjet.TryGetComponent<Renderer>(out var renderer))
@@ -76,7 +80,11 @@ public class Add_script : MonoBehaviour
             }
         }
 
-        addPrefab_script.AddPrefab(name_objet, newObjet);
+        var uObj = FunctionUObj != null ? FunctionUObj.Invoke(newObjet) : new UsableObject();
+
+        newObjet.name = uObj.name;
+        
+        addPrefab_script.AddPrefab(uObj, newObjet);
     }
 
     public GameObject GetObject()

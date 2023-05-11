@@ -15,7 +15,7 @@ namespace Assets.Scripts
         public Dictionary<string, UsableObject> menus;
         public Dictionary<string, Button> clickable;
 
-        public Func<string, string> function;
+        public Func<string, string> Function;
 
 
         void Start()

@@ -112,7 +112,8 @@ public class AttributPanelScript : MonoBehaviour
                     string fieldName = fields[i].Name;
                     dim1.onEndEdit.AddListener((value) =>
                     {
-                        string val = correctDecimalSeparator(value, correctNumberDecimalSeparator, incorrectNumberDecimalSeparator);
+                        string val = correctDecimalSeparator(value, correctNumberDecimalSeparator,
+                            incorrectNumberDecimalSeparator);
                         vec3.x = float.Parse(val);
                         setObjectAttributeValue(fieldName, vec3);
                         callFunction();
@@ -120,7 +121,8 @@ public class AttributPanelScript : MonoBehaviour
 
                     dim2.onEndEdit.AddListener((value) =>
                     {
-                        string val = correctDecimalSeparator(value, correctNumberDecimalSeparator, incorrectNumberDecimalSeparator);
+                        string val = correctDecimalSeparator(value, correctNumberDecimalSeparator,
+                            incorrectNumberDecimalSeparator);
                         vec3.y = float.Parse(val);
                         setObjectAttributeValue(fieldName, vec3);
                         callFunction();
@@ -128,7 +130,8 @@ public class AttributPanelScript : MonoBehaviour
 
                     dim3.onEndEdit.AddListener((value) =>
                     {
-                        string val = correctDecimalSeparator(value, correctNumberDecimalSeparator, incorrectNumberDecimalSeparator);
+                        string val = correctDecimalSeparator(value, correctNumberDecimalSeparator,
+                            incorrectNumberDecimalSeparator);
                         vec3.z = float.Parse(val);
                         setObjectAttributeValue(fieldName, vec3);
                         callFunction();
@@ -147,7 +150,8 @@ public class AttributPanelScript : MonoBehaviour
                     string fieldName = fields[i].Name;
                     dim1.onEndEdit.AddListener((value) =>
                     {
-                        string val = correctDecimalSeparator(value, correctNumberDecimalSeparator, incorrectNumberDecimalSeparator);
+                        string val = correctDecimalSeparator(value, correctNumberDecimalSeparator,
+                            incorrectNumberDecimalSeparator);
                         vec2.x = float.Parse(val);
                         setObjectAttributeValue(fieldName, vec2);
                         callFunction();
@@ -155,7 +159,8 @@ public class AttributPanelScript : MonoBehaviour
 
                     dim2.onEndEdit.AddListener((value) =>
                     {
-                        string val = correctDecimalSeparator(value, correctNumberDecimalSeparator, incorrectNumberDecimalSeparator);
+                        string val = correctDecimalSeparator(value, correctNumberDecimalSeparator,
+                            incorrectNumberDecimalSeparator);
                         vec2.y = float.Parse(val);
                         setObjectAttributeValue(fieldName, vec2);
                         callFunction();
@@ -163,10 +168,10 @@ public class AttributPanelScript : MonoBehaviour
                 }
 
                 if (fieldTypes[i] == typeof(int) ||
-                   fieldTypes[i] == typeof(float) ||
-                   fieldTypes[i] == typeof(double) ||
-                   fieldTypes[i] == typeof(string) ||
-                   fieldTypes[i] == typeof(char))
+                    fieldTypes[i] == typeof(float) ||
+                    fieldTypes[i] == typeof(double) ||
+                    fieldTypes[i] == typeof(string) ||
+                    fieldTypes[i] == typeof(char))
 
                 {
                     GameObject attributeSubPanel = Instantiate(unDPrefab, transform);
@@ -193,7 +198,8 @@ public class AttributPanelScript : MonoBehaviour
                         dim1.text = attributeValue.ToString();
                         dim1.onEndEdit.AddListener((value) =>
                         {
-                            string val = correctDecimalSeparator(value, correctNumberDecimalSeparator, incorrectNumberDecimalSeparator);
+                            string val = correctDecimalSeparator(value, correctNumberDecimalSeparator,
+                                incorrectNumberDecimalSeparator);
                             attributeValue = float.Parse(val);
                             setObjectAttributeValue(fieldName, attributeValue);
                             callFunction();
@@ -206,7 +212,8 @@ public class AttributPanelScript : MonoBehaviour
                         dim1.text = attributeValue.ToString();
                         dim1.onEndEdit.AddListener((value) =>
                         {
-                            string val = correctDecimalSeparator(value, correctNumberDecimalSeparator, incorrectNumberDecimalSeparator);
+                            string val = correctDecimalSeparator(value, correctNumberDecimalSeparator,
+                                incorrectNumberDecimalSeparator);
                             attributeValue = double.Parse(val);
                             setObjectAttributeValue(fieldName, attributeValue);
                             callFunction();
@@ -225,6 +232,7 @@ public class AttributPanelScript : MonoBehaviour
                             callFunction();
                         });
                     }
+
                     if (fieldTypes[i] == typeof(String))
                     {
                         string attributeValue = getObjectAttributeValue(fields[i].Name).ToString();
@@ -237,13 +245,86 @@ public class AttributPanelScript : MonoBehaviour
                         });
                     }
                 }
+
                 if (fieldTypes[i] == typeof(Material))
                 {
                     GameObject objToShowTextureLive = new GameObject("TextureObject");
                     Image imgToShowTextureLive = objToShowTextureLive.AddComponent<Image>();
                     Material attributeMaterial = (Material)getObjectAttributeValue(fields[i].Name);
                     Debug.Log("Material Name : " + attributeMaterial.name);
+
+                    // Create a copy of the material
+                    Material newMaterial = new Material(attributeMaterial);
+                    newMaterial.name = attributeMaterial.name + " (copy)";
+
+                    Texture2D attributeTexture = (Texture2D)newMaterial.mainTexture;
+
+                    if(attributeTexture == null)
+                    {
+                        Debug.LogWarning(attributeMaterial + " - " + attributeTexture);
+                    }
+
+                    int textureWidth = attributeTexture.width;
+                    int textureHeight = attributeTexture.height;
+
+                    Sprite attributeSprite = Sprite.Create(attributeTexture, new Rect(0, 0, textureWidth, textureHeight), Vector2.zero);
+
+                    imgToShowTextureLive.sprite = attributeSprite;
+                    objToShowTextureLive.transform.SetParent(transform);
+                    string fieldName = fields[i].Name;
+                    EventTrigger imgTrigger = imgToShowTextureLive.AddComponent<EventTrigger>();
+                    EventTrigger.Entry imgEntry = new EventTrigger.Entry();
+                    imgEntry.eventID = EventTriggerType.PointerClick;
+                    object[] neededParams = { attributeTexture, newMaterial, fieldName };
+                    imgEntry.callback.AddListener((data) =>
+                    {
+                        StartCoroutine(WaitForUpdate(neededParams));
+                    });
+                    imgTrigger.triggers.Add(imgEntry);
+                }
+
+                this.attributePanelHasElements = true;
+
+                this.attributePanelHasElements = true;
+            }
+        }
+    }
+
+    private System.Collections.IEnumerator WaitForUpdate(object[] neededParams)
+{
+    Texture2D attributeTexture = (Texture2D)neededParams[0];
+    Material attributeMaterial = (Material)neededParams[1];
+    string fieldName = (string)neededParams[2];
+    GameObject OpenFileDialogPrefab = Resources.Load<GameObject>("Prefabs/OpenFileDialog");
+    Canvas rootCanvas = FindObjectOfType<Canvas>();
+    GameObject openFileDialog = Instantiate(OpenFileDialogPrefab, rootCanvas.transform);
+    OpenFileDialog_Script ofdScript = openFileDialog.GetComponent<OpenFileDialog_Script>();
+    ofdScript.setFileFilter("png");
+    while (ofdScript.getUserChoiceStatus())
+    {
+        yield return null;
+    }
+    selectedFile = ofdScript.getPathOfSelectedFile();
+    if (selectedFile != null)
+    {
+        ofdScript.exit();
+        byte[] imgData = System.IO.File.ReadAllBytes(selectedFile);
+        attributeTexture.LoadImage(imgData);
+        Material newMaterial = Instantiate(attributeMaterial);
+        newMaterial.mainTexture = attributeTexture;
+        setObjectAttributeValue(fieldName, newMaterial);
+    }
+}
+
+                /*if (fieldTypes[i] == typeof(Material))
+                {
+                    GameObject objToShowTextureLive = new GameObject("TextureObject");
+                    Image imgToShowTextureLive = objToShowTextureLive.AddComponent<Image>();
+                    // Material attributeMaterial = (Material)getObjectAttributeValue(fields[i].Name);
+                    Material attributeMaterial = new Material((Material)getObjectAttributeValue(fields[i].Name));
+                    Debug.Log("Material Name : " + attributeMaterial.name);
                     Texture2D attributeTexture = (Texture2D)attributeMaterial.mainTexture;
+                    if(attributeTexture ==null) Debug.LogWarning(attributeMaterial + " - " + attributeTexture);
                     int textureWidth = attributeTexture.width;
                     int textureHeight = attributeTexture.height;
                     Sprite attributeSprite = Sprite.Create(attributeTexture, new Rect(0, 0, textureWidth, textureHeight), Vector2.zero);
@@ -288,10 +369,11 @@ public class AttributPanelScript : MonoBehaviour
             ofdScript.exit();
             byte[] imgData = System.IO.File.ReadAllBytes(selectedFile);
             attributeTexture.LoadImage(imgData);
-            attributeMaterial.mainTexture = attributeTexture;
+           // attributeMaterial.mainTexture = attributeTexture;
+           attributeMaterial.SetTexture("_MainTex", attributeTexture);
         }
         setObjectAttributeValue(fieldName, attributeMaterial);
-    }
+    }*/
 
 
     public void resetPanel()
