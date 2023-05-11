@@ -59,7 +59,9 @@ namespace Assets.Scripts
         {
             var p = (Planet)obj;
 
-            if (p.GetOldName() != null && p.name != p.GetOldName())
+            if (p.GetOldName() == null) p.UpdateOldName();
+
+            if (p.name != p.GetOldName())
             {
                 if (_objects.ContainsKey(p.name))
                 {
@@ -95,9 +97,13 @@ namespace Assets.Scripts
             var gObj = GameObject.Find(objName);
             if (gObj != null)
             {
-                //Debug.Log(gobj);
+                Debug.Log(objName);
                 var camScript = Cam.GetComponent<Camera_script>();
                 camScript.MoveToTarget(gObj);
+            }
+            else
+            {
+                Debug.LogWarning(objName);
             }
 
             var pScript = GetComponentInChildren<AttributPanelScript>();
@@ -110,9 +116,9 @@ namespace Assets.Scripts
 
         }
 
-        private void AddPlanet(UsableObject o, GameObject parent)
+        private void AddPlanet(Planet p, GameObject parent)
         {
-            var gObj = RenderPlanet(o);
+            var gObj = RenderPlanet(p);
             var script = gObj.GetComponentInChildren<Planet_script>();
 
             if (parent != null)
@@ -125,10 +131,11 @@ namespace Assets.Scripts
             var objRenderer = gObj.GetComponent<Renderer>();
             if (objRenderer != null)
             {
-                objRenderer.material = Resources.Load<Material>("Materials/" + o.name.ToLower());
+                objRenderer.material = Resources.Load<Material>("Materials/" + p.name.ToLower());
+                p.material = objRenderer.material;
             }
 
-            foreach (KeyValuePair<string, UsableObject> child in o.Children)
+            foreach (KeyValuePair<string, UsableObject> child in p.Children)
             {
                 AddPlanet((Planet)child.Value, gObj);
             }
