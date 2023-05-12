@@ -13,7 +13,7 @@ public class Onglet_script : MonoBehaviour
     private GameObject objet;
     private Camera_script camScript;
     private AttributPanelScript attribut_script;
-    public Func<GameObject, int> OnClickOnglet;
+    public Action<GameObject> OnClickOnglet;
     public Action<GameObject> OnClickDelete;
 
     // Start is called before the first frame update
@@ -38,6 +38,11 @@ public class Onglet_script : MonoBehaviour
     void Update()
     {
         
+    }
+
+    public void UpdateTextOnglet()
+    {
+        gameObject.GetComponentInChildren<Text>().text = objet.name;
     }
 
     internal void SetObjet(GameObject obj)

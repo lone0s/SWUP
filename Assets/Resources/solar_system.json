@@ -9,7 +9,8 @@
                 "x": "0",
                 "y": "0",
                 "z": "0"
-            }
+            },
+          "materialPath" : "Materials/soleil"
         },
         {
             "name": "Mercure",
@@ -20,7 +21,8 @@
                 "x": "1.5",
                 "y": "0",
                 "z": "0"
-            }
+            },
+          "materialPath" : "Materials/mercure"
         },
         {
             "name": "Venus",
@@ -32,6 +34,7 @@
               "y": "0",
               "z": "0"
             },
+          "materialPath" : "Materials/venus",
             "children": {
                 "Ceres" : {
                     "name": "Ceres",
@@ -42,7 +45,8 @@
                     "x": "2.5",
                     "y": "0",
                     "z": "0.5"
-                    }
+                    },
+                  "materialPath" : "Materials/ceres"
                 },
                 "Haumea" : {
                     "name": "Haumea",
@@ -53,7 +57,8 @@
                     "x": "2.5",
                     "y": "0",
                     "z": "-0.5"
-                    }
+                    },
+                  "materialPath" : "Materials/haumea"
                 }
             }
         },
@@ -67,6 +72,7 @@
                 "y": "0",
                 "z": "0"
             },
+          "materialPath" : "Materials/terre",
             "children": {
                 "Lune" : {
                     "name": "Lune",
@@ -77,7 +83,8 @@
                         "x": "3.5",
                         "y": "0",
                         "z": "0.5"
-                    }
+                    },
+                  "materialPath" : "Materials/lune"
                 }
             }
           },
@@ -90,7 +97,8 @@
               "x": "4.5",
               "y": "0",
               "z": "0"
-            }
+            },
+            "materialPath" : "Materials/mars"
           },
           {
             "name": "Jupiter",
@@ -101,7 +109,8 @@
               "x": "5.5",
               "y": "0",
               "z": "0"
-            }
+            },
+            "materialPath" : "Materials/jupiter"
           },
           {
             "name": "Saturne",
@@ -112,7 +121,8 @@
               "x": "6.5",
               "y": "0",
               "z": "0"
-            }
+            },
+            "materialPath" : "Materials/saturne"
           },
           {
               "name": "Uranus",
@@ -123,7 +133,8 @@
                   "x": "7.5",
                   "y": "0",
                   "z": "0"
-              }
+              },
+            "materialPath" : "Materials/uranus"
           },
           {
               "name": "Neptune",
@@ -134,7 +145,8 @@
                   "x": "8.5",
                   "y": "0",
                   "z": "0"
-              }
+              },
+            "materialPath" : "Materials/neptune"
           },
           {
               "name": "Lebon_James",
@@ -145,7 +157,8 @@
                   "x": "9.5",
                   "y": "0",
                   "z": "0"
-              }
+              },
+            "materialPath" : "Materials/lebon_james"
           }
     ]
 }

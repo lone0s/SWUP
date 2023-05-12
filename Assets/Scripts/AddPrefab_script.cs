@@ -12,8 +12,10 @@ public class AddPrefab_script : MonoBehaviour
     private Camera cam;
     private Camera_script camScript;
 
-    public Func<GameObject, int> FunctionOnClick;
+    public Action<GameObject> FunctionOnClick;
     public Action<GameObject> FunctionOnClickDelete;
+
+    public Text buttonText;
     // Start is called before the first frame update
     void Start()
     {
@@ -30,7 +32,7 @@ public class AddPrefab_script : MonoBehaviour
     {
     }
 
-    public void AddPrefab(UsableObject uObj, GameObject objet){
+    public Onglet_script AddPrefab(UsableObject uObj, GameObject objet){
        
         // Instancie le prefab à la position de l'objet courant
         GameObject newOnglet = Instantiate(onglet, transform.position, Quaternion.identity);
@@ -43,10 +45,12 @@ public class AddPrefab_script : MonoBehaviour
         ongletScript.SetCamScript(camScript);
 
         // Met à jour le texte du bouton
-        Text buttonText = newOnglet.GetComponentInChildren<Text>();
+        buttonText = newOnglet.GetComponentInChildren<Text>();
         buttonText.text = uObj.name;
         
         // Ajoute le nouvel objet à la hiérarchie en tant qu'enfant de l'objet courant
         newOnglet.transform.SetParent(transform, false);
+
+        return ongletScript;
     }
 }

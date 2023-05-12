@@ -17,8 +17,10 @@ public class Add_script : MonoBehaviour
 
     public MonoScript script_objet = null;
     private Func<GameObject,UsableObject> _functionUObj;
-    private Func<GameObject, int> _functionOnClick;
+    private Action<GameObject> _functionOnClick;
     private Action<GameObject> _functionOnClickDelete;
+
+    private List<Onglet_script> _onglets = new ();
 
     // Start is called before the first frame update
     void Start()
@@ -36,7 +38,7 @@ public class Add_script : MonoBehaviour
         select_script = select_btn.GetComponent<SelectPrefab_script>();
     }
 
-    public void setOnCLick(Func<GameObject, int> f)
+    public void setOnCLick(Action<GameObject> f)
     {
         _functionOnClick = f;
         addPrefab_script.FunctionOnClick = _functionOnClick;
@@ -74,10 +76,16 @@ public class Add_script : MonoBehaviour
         }
         
         var uObj = _functionUObj != null ? _functionUObj.Invoke(newObjet) : new UsableObject();
+        
+        
+        _onglets.Add(addPrefab_script.AddPrefab(uObj, newObjet));
+    }
 
-        //newObjet.name = uObj.name;
-        
-        
-        addPrefab_script.AddPrefab(uObj, newObjet);
+    public void UpdateOnglets()
+    {
+        foreach (var onglet in _onglets)
+        {
+            onglet.UpdateTextOnglet();
+        }
     }
 }

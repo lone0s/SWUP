@@ -55,10 +55,11 @@ namespace Assets.Scripts
             }
         }
 
+        private Add_script _addScript;
         private void InitAddPanel()
         {
-            var script = gameObject.GetComponentInChildren<Add_script>();
-            script.setFuncObj(gObj =>
+            _addScript = gameObject.GetComponentInChildren<Add_script>();
+            _addScript.setFuncObj(gObj =>
             {
                 var p = new Planet();
                 gObj.name = p.name;
@@ -70,13 +71,9 @@ namespace Assets.Scripts
                 scriptObj.planet = p;
                 return p;
             });
-            script.setOnCLick(gObj =>
-            {
-                OnClickOnglet(gObj);
-                return 0;
-            });
+            _addScript.setOnCLick(OnClickOnglet);
             
-            script.setFunOnClickDelete(gObj =>
+            _addScript.setFunOnClickDelete(gObj =>
             {
                 if(gObj != null && _newObjects.ContainsKey(gObj.name))
                     _newObjects.Remove(gObj.name);
@@ -181,7 +178,7 @@ namespace Assets.Scripts
             pScript.function = arg =>
             {
                 RenderPlanet(arg);
-                //InitMenus();
+                _addScript.UpdateOnglets();
                 return null;
             };
             pScript.initPanel(obj);
@@ -189,7 +186,7 @@ namespace Assets.Scripts
 
         private void AddPlanet(Planet p, GameObject parent)
         {
-            
+            p.InitMaterial();
             var gObj = GameObject.CreatePrimitive(PrimitiveType.Sphere);
             gObj.name = p.name;
             gObj.AddComponent<Planet_script>();
@@ -204,12 +201,12 @@ namespace Assets.Scripts
             }
 
 
-            var objRenderer = gObj.GetComponent<Renderer>();
+            /*var objRenderer = gObj.GetComponent<Renderer>();
             if (objRenderer != null)
             {
                 objRenderer.material = Resources.Load<Material>("Materials/" + p.name.ToLower());
                 p.material = objRenderer.material;
-            }
+            }*/
 
             foreach (var child in p.Children)
             {
@@ -243,14 +240,18 @@ namespace Assets.Scripts
             var idx = 0;
             foreach (var obj in _objects)
             {
-                data[idx] = (Planet)obj.Value;
+                var p = (Planet)obj.Value;
+                data[idx] = p;
+                p.UpdateMaterialPath();
+                
                 idx++;
             }
             
             foreach (var obj in _newObjects)
             {
-                data[idx] = (Planet)obj.Value;
-                idx++;
+                var p = (Planet)obj.Value;
+                data[idx] = p;
+                p.UpdateMaterialPath();
             }
             
 
@@ -285,7 +286,7 @@ namespace Assets.Scripts
         
         private void OnDestroy()
         {
-            //SaveObjectsInJson("/Assets/Resources/Saves/save_" + Guid.NewGuid() + ".json") ;
+            SaveObjectsInJson("Assets/Resources/Saves/save_" + Guid.NewGuid().ToString("N") + ".json") ;
         }
     }
     
