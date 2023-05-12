@@ -1,5 +1,7 @@
+using Assets.DataClasses;
 using System.Collections;
 using System.Collections.Generic;
+using Unity.VisualScripting;
 using UnityEngine;
 using static UnityEngine.GraphicsBuffer;
 
@@ -10,6 +12,7 @@ public class Camera_script : MonoBehaviour
     private Vector3 initPos;
     private Planet_script objet_followed;
     private int move;
+    private float distance = -2.5f;
 
     // Start is called before the first frame update
     void Start()
@@ -26,14 +29,27 @@ public class Camera_script : MonoBehaviour
     private void FixedUpdate()
     {
         if (!isMove)
-            if(objet_followed != null)
-                transform.position = objet_followed.GetPosCam();
+            transform.position = GetPosCam();
+    }
+
+    private Vector3 GetPosCam()
+    {
+        if (objet_followed != null)
+        {
+            float size = objet_followed.transform.localScale.x;
+            Vector3 posCam = objet_followed.transform.position;
+            posCam.z = objet_followed.transform.position.z + (distance * size) * 2;
+            return posCam;
+        }
+        else
+        {
+            return initPos;
+        }
     }
 
     public void Reset()
     {
         isMove = false; // je dis d'arrêter le mouvement
-        transform.position = initPos;
         objet_followed = null;
     }
 
@@ -88,7 +104,7 @@ public class Camera_script : MonoBehaviour
             float t = Mathf.Clamp01(elapsedTime / transition);  // la progression de la transition (entre 0 et 1)
 
             // Interpolation linéaire de la position de la caméra
-            transform.position = Vector3.Lerp(startPosition, objet_followed.GetPosCam(), t);
+            transform.position = Vector3.Lerp(startPosition, GetPosCam(), t);
 
             yield return null;  //j'attend le prochain frame
         }
@@ -134,7 +150,7 @@ public class Camera_script : MonoBehaviour
             float t = Mathf.Clamp01(elapsedTime / (transition / 2));  // la progression de la transition (entre 0 et 1)
 
             // Interpolation linéaire de la position de la caméra
-            transform.position = Vector3.Lerp(startPosition, objet_followed.GetPosCam(), t);
+            transform.position = Vector3.Lerp(startPosition, GetPosCam(), t);
 
             yield return null;  //j'attend le prochain frame
         }

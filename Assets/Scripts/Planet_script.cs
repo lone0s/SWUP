@@ -10,14 +10,14 @@ public class Planet_script : MonoBehaviour
 
     public Planet planet;
     public GameObject parent;
-    private Vector3 posCam;
-    private float distance = -2.5f;
     private float timeFullRotationEarth = 10;
     private float timeAxisRotationEarth = 1000;
 
     void Start()
     {
-        planet = planet != null ? planet : new Planet();
+        planet ??= new Planet();
+        transform.position = planet.position;
+        transform.localScale = new Vector3(planet.radius, planet.radius, planet.radius);
     }
 
     void FixedUpdate(){
@@ -36,14 +36,5 @@ public class Planet_script : MonoBehaviour
 
     void Update()
     {
-    }
-
-    internal Vector3 GetPosCam()
-    {
-        planet.radius = transform.localScale.x;
-        float child = parent != null ? 2 : 1;
-        posCam = transform.position;
-        posCam.z = transform.position.z + (distance * planet.radius) * child;
-        return posCam;
     }
 }

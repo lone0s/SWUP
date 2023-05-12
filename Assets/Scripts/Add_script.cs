@@ -15,17 +15,8 @@ public class Add_script : MonoBehaviour
     private Button addButton;
     private string objet_path = "";
 
-    public Func<GameObject,UsableObject> FunctionUObj;
-
-    //Parametre object
-    private GameObject obj;
-    public string name_objet = "Planète";
-
-    //taille, position, vitesse rotation, materiel
-    public float size_objet = 1f;
-    public Vector3 position_objet = Vector3.zero;
-    public Color color_objet = Color.white;
     public MonoScript script_objet = null;
+    public Func<GameObject,UsableObject> FunctionUObj;
 
     // Start is called before the first frame update
     void Start()
@@ -53,31 +44,11 @@ public class Add_script : MonoBehaviour
         GameObject newObjet;
         if (!objet_path.IsUnityNull())
         {
-            obj = PrefabUtility.LoadPrefabContents(objet_path);
-            newObjet = Instantiate(obj);
+            newObjet = Instantiate(PrefabUtility.LoadPrefabContents(objet_path));
         }
         else
         {
             newObjet = GameObject.CreatePrimitive(PrimitiveType.Sphere);
-        }
-        
-
-        //newObjet.name = name_objet;
-        newObjet.transform.position = position_objet;
-        newObjet.transform.localScale = new Vector3(size_objet, size_objet, size_objet);
-
-        // Ajouter le un script à l'objet
-        // if(script_objet != null)
-        //     newObjet.AddComponent(script_objet.GetClass());
-
-        // Applique la couleur spécifiée au matériau de l'objet
-        if (newObjet.TryGetComponent<Renderer>(out var renderer))
-        {
-            Material material = renderer.material;
-            if (material != null)
-            {
-                material.color = color_objet;
-            }
         }
 
         var uObj = FunctionUObj != null ? FunctionUObj.Invoke(newObjet) : new UsableObject();
@@ -85,10 +56,5 @@ public class Add_script : MonoBehaviour
         newObjet.name = uObj.name;
         
         addPrefab_script.AddPrefab(uObj, newObjet);
-    }
-
-    public GameObject GetObject()
-    {
-        return obj;
     }
 }
