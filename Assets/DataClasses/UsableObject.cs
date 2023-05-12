@@ -34,6 +34,7 @@ namespace Assets.DataClasses
         public float period = 365F;
         public float rotation_days = 1;
         public Vector3 position = new (0,0,0);
+        private Vector3 _position = new(0, 0, 0);
         
         // [JsonIgnore]
         public Material material = Resources.Load<Material>("Materials/Default");
@@ -41,6 +42,15 @@ namespace Assets.DataClasses
         public Planet()
         {
             material.mainTexture = Texture2D.whiteTexture;
+        }
+        
+        public Vector3 GetOldPosition()
+        {
+            return _position;
+        }
+        public void UpdateOldPosition()
+        {
+            _position = position;
         }
     }
 

@@ -82,7 +82,7 @@ namespace Assets.Scripts
             });
         }
 
-        private void RenderPlanet(object obj)
+        private void RenderPlanet(object obj, bool isChild = false)
         {
             var p = (Planet)obj;
 
@@ -117,8 +117,15 @@ namespace Assets.Scripts
                 Debug.LogWarning("NImpossible to render => GameObject not found");
                 return;
             }
-            
-            gObj.transform.position = p.position;
+
+            if (!isChild)
+            {
+                gObj.transform.position = p.position;
+                p.UpdateOldPosition();
+            }else{
+                p.position = p.GetOldPosition();
+                Debug.LogWarning("Impossible to change satellite position");
+            }
             gObj.transform.localScale = new Vector3(p.radius, p.radius, p.radius);
             
             var objRenderer = gObj.GetComponent<Renderer>();
@@ -128,7 +135,7 @@ namespace Assets.Scripts
             }
         }
 
-        private void OnClickMenu(string objName)
+        private void OnClickMenu(string objName, bool isChild = false)
         {
             var obj = FindObject(objName, _objects);
             var gObj = GameObject.Find(objName);
@@ -141,7 +148,7 @@ namespace Assets.Scripts
             var pScript = GetComponentInChildren<AttributPanelScript>();
             pScript.function = arg =>
             {
-                RenderPlanet(arg);
+                RenderPlanet(arg,isChild);
                 InitMenus();
                 pScript.initPanel(obj);
                 return null;

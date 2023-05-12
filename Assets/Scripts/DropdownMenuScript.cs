@@ -7,7 +7,7 @@ namespace Assets.Scripts
     public class DropdownMenuScript : MonoBehaviour
     {
         private MenusScript script;
-        private Action<string> function;
+        private Action<string,bool> function;
 
         void Start()
         {
@@ -20,7 +20,7 @@ namespace Assets.Scripts
             var objName = gameObject.GetComponent<Text>().text;
             if (function != null && objName != null)
             {
-                function.Invoke(objName);
+                function.Invoke(objName,true);
             }
 
         }
