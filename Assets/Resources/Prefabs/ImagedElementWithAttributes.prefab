@@ -176,11 +176,11 @@ PrefabInstance:
       objectReference: {fileID: 0}
     - target: {fileID: 8467839785824735850, guid: 7525264d0b927924e9cfbdb5f1e17e28, type: 3}
       propertyPath: m_PreferredWidth
-      value: 30
+      value: 50
       objectReference: {fileID: 0}
     - target: {fileID: 8467839785824735850, guid: 7525264d0b927924e9cfbdb5f1e17e28, type: 3}
       propertyPath: m_PreferredHeight
-      value: 30
+      value: 50
       objectReference: {fileID: 0}
     - target: {fileID: 8467839785824735855, guid: 7525264d0b927924e9cfbdb5f1e17e28, type: 3}
       propertyPath: m_AnchorMax.y

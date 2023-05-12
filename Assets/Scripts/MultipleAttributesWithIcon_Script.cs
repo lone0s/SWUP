@@ -18,6 +18,8 @@ public class MultipleAttributesWithIcon_Script : MonoBehaviour
     public void Awake()
     {
         initialize();
+        panel = transform;
+        panelTransform = panel.GetComponent<RectTransform>();
     }
 
     public void initialize()
@@ -40,8 +42,6 @@ public class MultipleAttributesWithIcon_Script : MonoBehaviour
 
     void injectStringsIntoTextFields()
     {
-        panel = transform;
-        panelTransform = panel.GetComponent<RectTransform>();
         for (int i = 0; i < attributeNames.Length; ++i)
         {
             GameObject tempInputField = new GameObject(attributeNames[i] + " Input");

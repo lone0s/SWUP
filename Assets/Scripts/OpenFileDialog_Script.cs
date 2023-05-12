@@ -1,66 +1,85 @@
 using System.IO;
-using UnityEngine;
-using UnityEngine.UI;
-using UnityEngine.EventSystems;
 using System.Linq;
+using UnityEngine;
+using UnityEngine.EventSystems;
+using UnityEngine.UI;
 
 public class OpenFileDialog_Script : MonoBehaviour
 {
     // Start is called before the first frame update
     public string directoryPath;
-    private string[] files;
-    private string[] subdirectories;
 
     public string fileIconPath;
     public string folderIconPath;
     public string goBackIcon;
     public string exitIcon;
 
+    private string baseDirLockPath;
+    private string[] files;
+    private string[] subdirectories;
+
     private Transform viewPanelTransform;
     private ViewPanel_Script viewPanelScript;
-    private int nbElementsInTargetFolder;
     private Image searchPanelSpecialActionIcon;
     private Image searchPanelSpecialActionIcon2;
-    private InputField pathText;
+    private InputField pathInput;
+    private GameObject linePrefab;
+
+    private int nbElementsInDirectory;
     private string selectedFile;
+    private string fileFilterFormat;
+
+    private bool triggerFileFilter = false;
+    private bool triggerLockOnBaseDirectory = false;
+    private bool triggerMetaFileFilter = true;
     private bool userIsChoosingFile = true;
 
-    private string fileFilterFormat;
-    private bool triggerFileFilter = false;
-    private bool triggerMetaFileFilter = true;
+    private char correctDirSeparator;
+    private char wrongDirSeparator;
 
     private void Awake()
-    { 
-        directoryPath = Path.Combine(Application.dataPath, "Resources");
-        updateFilesAndDirectories(directoryPath);
-        setNbElementsInFolder();
+    {
+        correctDirSeparator = Path.DirectorySeparatorChar;
+        wrongDirSeparator = 
+            correctDirSeparator == '\\' ? 
+                '/' : 
+                '\\';
+
+        if (directoryPath == null || directoryPath == "")
+            directoryPath = correctPath(Path.Combine(Application.dataPath, "Resources"));
+        //Du traitement redondant just in case
+        directoryPath = correctPath(Path.GetFullPath(directoryPath));
+        baseDirLockPath = correctPath(Application.dataPath);
+
         viewPanelScript = GameObject.Find("ViewPanel").GetComponent<ViewPanel_Script>();
-        viewPanelScript.setNbElementsInPanel(nbElementsInTargetFolder);
         viewPanelTransform = GameObject.Find("ViewPanel").transform;
+
+        verifyCoherenceDirLockAndBaseDir();
+        updateFilesAndDirectories(directoryPath);
+
+        linePrefab = Resources.Load<GameObject>("Prefabs/ImagedElementWithAttributes");
     }
 
-    private void setNbElementsInFolder()
-    {
-        nbElementsInTargetFolder = files.Length + subdirectories.Length;
-    }
-    public int getNbElementsInFolder()
-    {
-        return nbElementsInTargetFolder;
-    }
     void Start()
     {
-        directoryPath = Path.Combine(Application.dataPath, "Resources");
         searchPanelSpecialActionIcon = GameObject.Find("SearchPanel/SpecialActionIcon").GetComponent<Image>();
         searchPanelSpecialActionIcon2 = GameObject.Find("SearchPanel/SpecialActionIcon2").GetComponent<Image>();
+        
         float width, height;
+        
         ImagedText_Script.getWidthHeightOfImg(searchPanelSpecialActionIcon, out width, out height);
         searchPanelSpecialActionIcon.sprite = ImagedText_Script.makeSpriteOfPngFile(goBackIcon, width, height);
+        
         ImagedText_Script.getWidthHeightOfImg(searchPanelSpecialActionIcon2, out width, out height);
         searchPanelSpecialActionIcon2.sprite = ImagedText_Script.makeSpriteOfPngFile(exitIcon, width, height);
-        pathText = GameObject.Find("SearchPanel/PathInput/Path/InputDim").GetComponent<InputField>();
-        pathText.text = correctPathString(directoryPath);
-        insufflateLines();
+        
+        pathInput = GameObject.Find("SearchPanel/PathInput/Path/InputDim").GetComponent<InputField>();
+        pathInput.text = correctPath(directoryPath);
+        
+
         EventTrigger exitImgTrigger = searchPanelSpecialActionIcon2.gameObject.AddComponent<EventTrigger>();
+        EventTrigger goBackImgTrigger = searchPanelSpecialActionIcon.gameObject.AddComponent<EventTrigger>();
+
         EventTrigger.Entry exitEntry = new EventTrigger.Entry();
         exitEntry.eventID = EventTriggerType.PointerClick;
         exitEntry.callback.AddListener((data) =>
@@ -70,50 +89,60 @@ public class OpenFileDialog_Script : MonoBehaviour
         });
         exitImgTrigger.triggers.Add(exitEntry);
 
-        EventTrigger imgTrigger = searchPanelSpecialActionIcon.gameObject.AddComponent<EventTrigger>();
-        EventTrigger.Entry imgTriggerEntry = new EventTrigger.Entry();
-        imgTriggerEntry.eventID = EventTriggerType.PointerClick;
-        imgTriggerEntry.callback.AddListener((data) =>
+        
+        EventTrigger.Entry goBackEntry = new EventTrigger.Entry();
+        goBackEntry.eventID = EventTriggerType.PointerClick;
+        goBackEntry.callback.AddListener((data) =>
         {
             string newPath = RemovePathEntry(directoryPath);
-        if (newPath != null) { 
-            directoryPath = newPath;
-            pathText.text = newPath;
-            resetViewPanel();
-            updateFilesAndDirectories(newPath);
-            insufflateLines();
-            viewPanelScript.setNbElementsInPanel(getNbElementsInFolder());
-            viewPanelScript.updateScrollbar();
-            viewPanelScript.resetPanelView();
-            }
-        });
-        imgTrigger.triggers.Add(imgTriggerEntry);
-        pathText.onEndEdit.AddListener((text) =>
-        {
-            string inputPath = Path.GetFullPath(text);
-            if (Directory.Exists(inputPath))
+            if (newPath != null )
             {
-                directoryPath = inputPath;
-                pathText.text = inputPath;
-                resetViewPanel();
-                updateFilesAndDirectories(inputPath);
-                insufflateLines();
-                viewPanelScript.setNbElementsInPanel(getNbElementsInFolder());
-                viewPanelScript.updateScrollbar();
-                viewPanelScript.resetPanelView();
+                directoryPath = triggerLockOnBaseDirectory ?
+                    isAValidSubPath(baseDirLockPath, newPath) ?
+                        newPath :
+                        baseDirLockPath :
+                    newPath;
+                pathInput.text = directoryPath;
+                doRoutine();
             }
         });
+        goBackImgTrigger.triggers.Add(goBackEntry);
+
+        pathInput.onEndEdit.AddListener((text) =>
+        {
+            if (text != string.Empty)
+            {
+                string newInputPath = Directory.Exists(Path.GetFullPath(text)) ?
+                    Path.GetFullPath(text) :
+                    directoryPath;
+
+                directoryPath = triggerLockOnBaseDirectory ?
+                    isAValidSubPath(baseDirLockPath, newInputPath) ?
+                        newInputPath :
+                        baseDirLockPath :
+                    directoryPath;
+                doRoutine();
+            }
+            pathInput.text = directoryPath;
+        });
+
+        insufflateLines();
     }
 
-    string correctPathString(string path)
+    public void updateDirPath(string newPath)
     {
-        return path.Replace('/', '\\');
+        if (newPath != directoryPath)
+        {
+            directoryPath = newPath;
+            doRoutine();
+        }
     }
 
-    // Update is called once per frame
-    void Update()
+    void doRoutine()
     {
-        
+        updateFilesAndDirectories(directoryPath);
+        resetView();
+        insufflateLines();
     }
 
     void updateFilesAndDirectories(string path)
@@ -123,20 +152,14 @@ public class OpenFileDialog_Script : MonoBehaviour
         subdirectories = Directory.GetDirectories(path);
         
         if(triggerFileFilter)
-        {
             files = files.Where(file => file.EndsWith(fileFilterFormat)).ToArray();
-        }
-        if(triggerMetaFileFilter)
-        {
-            files = files.Where(file => (!file.Contains(".meta"))).ToArray();
-        }
-        setNbElementsInFolder();
 
-        int pathLength = path.Length;
-        if (path.EndsWith("\\"))
-        {
-            pathLength--;
-        }
+        if(triggerMetaFileFilter)
+            files = files.Where(file => (!file.Contains(".meta"))).ToArray();
+
+        updateNbElementsInDirectory();
+
+        int pathLength = path.EndsWith("\\") ? path.Length -1 : path.Length ;
 
         for (int i = 0; i < files.Length; ++i)
         {
@@ -146,30 +169,27 @@ public class OpenFileDialog_Script : MonoBehaviour
         {
             subdirectories[i] = subdirectories[i].Substring(pathLength + 1);
         }
+
+        viewPanelScript.setNbElementsInPanel(nbElementsInDirectory);
     }
 
-    void resetViewPanel()
-    {
-        foreach (Transform child in viewPanelTransform)
-        {
-            Destroy(child.gameObject);
-        }
-    }
 
     void insufflateLines()
     {
-        GameObject linePrefab = Resources.Load<GameObject>("Prefabs/ImagedElementWithAttributes");
+        
         for(int i = 0; i < files.Length; ++i)
         {
             GameObject line = Instantiate(linePrefab, viewPanelTransform);
             MultipleAttributesWithIcon_Script lineScript = line.GetComponent<MultipleAttributesWithIcon_Script>();
+            EventTrigger onClickEventTrigger = line.gameObject.AddComponent<EventTrigger>();
+            EventTrigger.Entry clickEvent = new EventTrigger.Entry();
+
             lineScript.iconPath = fileIconPath;
             lineScript.attributeNames[0] = "File";
             lineScript.name = "file" + (i + 1) ;
             lineScript.text = files[i];
             lineScript.initialize();
-            EventTrigger onClickEventTrigger = line.gameObject.AddComponent<EventTrigger>();
-            EventTrigger.Entry clickEvent = new EventTrigger.Entry();
+
             clickEvent.eventID = EventTriggerType.PointerClick;
             string currentPath = Path.Combine(directoryPath, files[i]);
             clickEvent.callback.AddListener((data) =>
@@ -184,26 +204,23 @@ public class OpenFileDialog_Script : MonoBehaviour
         {
             GameObject line = Instantiate(linePrefab, viewPanelTransform);
             MultipleAttributesWithIcon_Script lineScript = line.GetComponent<MultipleAttributesWithIcon_Script>();
+            EventTrigger onClickEventTrigger = line.gameObject.AddComponent<EventTrigger>();
+            EventTrigger.Entry clickEvent = new EventTrigger.Entry();
+
+            string newPath = correctPath(Path.GetFullPath(Path.Combine(directoryPath, subdirectories[i])));
+
             lineScript.iconPath = folderIconPath;
             lineScript.attributeNames[0] = "Directory";
             lineScript.name = "folder" + (i + 1);
             lineScript.text = subdirectories[i];
             lineScript.initialize();
 
-            EventTrigger onClickEventTrigger = line.gameObject.AddComponent<EventTrigger>();
-            EventTrigger.Entry clickEvent = new EventTrigger.Entry();
             clickEvent.eventID = EventTriggerType.PointerClick;
-            string newPath = Path.GetFullPath(Path.Combine(directoryPath,  subdirectories[i])) ;
             clickEvent.callback.AddListener((data) =>
             {
-                resetViewPanel();
-                updateFilesAndDirectories(newPath);
-                pathText.text = correctPathString(newPath);
+                pathInput.text = newPath;
                 directoryPath = newPath;
-                viewPanelScript.setNbElementsInPanel(getNbElementsInFolder());
-                viewPanelScript.updateScrollbar();
-                viewPanelScript.resetPanelView();
-                insufflateLines();
+                doRoutine();
             });
             onClickEventTrigger.triggers.Add(clickEvent);
         }
@@ -219,7 +236,7 @@ public class OpenFileDialog_Script : MonoBehaviour
 
     public string getPathOfSelectedFile()
     {
-        return selectedFile;
+        return correctPath(selectedFile);
     }
     //Pour supprimer la fenetre de dialogue
     public void exit()
@@ -234,7 +251,7 @@ public class OpenFileDialog_Script : MonoBehaviour
 
     public bool getUserChoiceStatus()
     {
-        return this.userIsChoosingFile;
+        return userIsChoosingFile;
     }
 
     public void setFileFilter(string fileFormat)
@@ -246,10 +263,63 @@ public class OpenFileDialog_Script : MonoBehaviour
     {
         triggerMetaFileFilter = true;
     }
+
+    public void setDirLock(string baseDir)
+    {
+        baseDirLockPath = baseDir;
+        triggerLockOnBaseDirectory = true;
+    }
+
+    //Si jamais..
     private void resetFilters()
     {
         triggerFileFilter = false;
         triggerMetaFileFilter = false;
         fileFilterFormat = null;
     }
+
+    public static bool isAValidSubPath(string basePath, string otherPath)
+    {
+        return (
+            basePath != otherPath && 
+            (otherPath.StartsWith(basePath)) 
+            || basePath == otherPath);
+    }
+
+    private void verifyCoherenceDirLockAndBaseDir()
+    {
+        if(triggerLockOnBaseDirectory && !isAValidSubPath(baseDirLockPath, directoryPath))
+        {
+            Debug.LogWarning("Incohérence entre le path servant de lock, et le path de la fenetre de dialogue, lock desactive ://");
+            triggerLockOnBaseDirectory = false;
+        }
+    }
+    private void updateNbElementsInDirectory()
+    {
+        nbElementsInDirectory = files.Length + subdirectories.Length;
+    }
+
+    public string correctPath(string path)
+    {
+        return path.Replace(wrongDirSeparator, correctDirSeparator);
+    }
+
+    void resetView()
+    {
+        Debug.Log(viewPanelScript.name);
+        viewPanelScript.resetPanelView();
+    }
+
+    public string getRessourcesPath()
+    {
+        return correctPath(Path.Combine(Application.dataPath, "Resources")); 
+    }
+
+    public string getPathFromRessources(string path)
+    {
+        if (path.StartsWith(getRessourcesPath()))
+            return path.Substring(getRessourcesPath().Length + 1);
+        return path;
+    }
+
 }

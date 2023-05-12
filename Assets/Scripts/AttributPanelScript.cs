@@ -29,38 +29,26 @@ public class AttributPanelScript : MonoBehaviour
 
     private void Awake()
     {
-        this.compatibleTypes = new HashSet<Type>();
         fillCompatibleTypes();
         setCorrectAndIncorrectDecimalSeparators();
-
     }
 
-    private void setCorrectAndIncorrectDecimalSeparators()
-    {
-        Char[] buffer = CultureInfo.CurrentCulture.NumberFormat.NumberDecimalSeparator.ToCharArray();
-        correctNumberDecimalSeparator = buffer[0];
-        incorrectNumberDecimalSeparator =
-            correctNumberDecimalSeparator == ',' ?
-                '.' :
-                ',';
+    void Start(){}
+
+    void Update(){}
+
+    void callFunction() {
+        if (this.function != null) this.function.Invoke(this.objectInstance);
     }
 
-    void Start()
-    {
-    }
 
-    void callFunction(){
-        if(this.function != null) this.function.Invoke(this.objectInstance);
-    }
-
-    
     public void initPanel(object objInstance)
-    { 
+    {
         this.objectInstance = objInstance;
         this.objectType = objInstance.GetType();
         this.fields = objectType.GetFields();
         this.fieldTypes = new Type[fields.Length];
-        for (int i = 0; i <  fields.Length; ++i)
+        for (int i = 0; i < fields.Length; ++i)
         {
             fieldTypes[i] = fields[i].FieldType;
         }
@@ -73,7 +61,7 @@ public class AttributPanelScript : MonoBehaviour
     {
         objectType.GetField(fieldName).SetValue(objectInstance, fieldValue);
     }
-   
+
     object getObjectAttributeValue(string fieldName)
     {
         object fieldValue = objectType.GetField(fieldName).GetValue(objectInstance);
@@ -106,6 +94,10 @@ public class AttributPanelScript : MonoBehaviour
                     InputField dim1 = attributeSubPanel.transform.Find("dim1/InputDim").GetComponent<InputField>();
                     InputField dim2 = attributeSubPanel.transform.Find("dim2/InputDim").GetComponent<InputField>();
                     InputField dim3 = attributeSubPanel.transform.Find("dim3/InputDim").GetComponent<InputField>();
+                    dim1.contentType = InputField.ContentType.DecimalNumber;
+                    dim2.contentType = InputField.ContentType.DecimalNumber;
+                    dim3.contentType = InputField.ContentType.DecimalNumber;
+
                     Vector3 vec3 = (Vector3)getObjectAttributeValue(fields[i].Name);
                     dim1.text = vec3.x.ToString();
                     dim2.text = vec3.y.ToString();
@@ -145,6 +137,9 @@ public class AttributPanelScript : MonoBehaviour
                     GameObject attributeSubPanel = Instantiate(deuxDPrefab, transform);
                     InputField dim1 = attributeSubPanel.transform.Find("dim1/InputDim").GetComponent<InputField>();
                     InputField dim2 = attributeSubPanel.transform.Find("dim2/InputDim").GetComponent<InputField>();
+                    dim1.contentType = InputField.ContentType.DecimalNumber;
+                    dim2.contentType = InputField.ContentType.DecimalNumber;
+
                     Vector2 vec2 = (Vector2)getObjectAttributeValue(fields[i].Name);
                     dim1.text = vec2.x.ToString();
                     dim2.text = vec2.y.ToString();
@@ -184,6 +179,7 @@ public class AttributPanelScript : MonoBehaviour
 
                     if (fieldTypes[i] == typeof(int))
                     {
+                        dim1.contentType = InputField.ContentType.IntegerNumber;
                         int attributeValue = (int)getObjectAttributeValue(fields[i].Name);
                         dim1.text = attributeValue.ToString();
                         dim1.onEndEdit.AddListener((value) =>
@@ -196,6 +192,7 @@ public class AttributPanelScript : MonoBehaviour
 
                     if (fieldTypes[i] == typeof(float))
                     {
+                        dim1.contentType = InputField.ContentType.DecimalNumber;
                         float attributeValue = (float)getObjectAttributeValue(fields[i].Name);
                         dim1.text = attributeValue.ToString();
                         dim1.onEndEdit.AddListener((value) =>
@@ -210,6 +207,7 @@ public class AttributPanelScript : MonoBehaviour
 
                     if (fieldTypes[i] == typeof(double))
                     {
+                        dim1.contentType = InputField.ContentType.DecimalNumber;
                         double attributeValue = (double)getObjectAttributeValue(fields[i].Name);
                         dim1.text = attributeValue.ToString();
                         dim1.onEndEdit.AddListener((value) =>
@@ -254,7 +252,7 @@ public class AttributPanelScript : MonoBehaviour
                     Image imgToShowTextureLive = objToShowTextureLive.AddComponent<Image>();
                     Material attributeMaterial = (Material)getObjectAttributeValue(fields[i].Name);
                     Debug.Log("Material Name : " + attributeMaterial.name);
-                    
+
                     UpdateSprite(attributeMaterial, imgToShowTextureLive);
                     objToShowTextureLive.transform.SetParent(transform);
                     var fieldName = fields[i].Name;
@@ -276,40 +274,42 @@ public class AttributPanelScript : MonoBehaviour
     private void UpdateSprite(Material m, Image img)
     {
         var attributeTexture = (Texture2D)m.mainTexture;
-                    
+
         var textureWidth = attributeTexture.width;
         var textureHeight = attributeTexture.height;
-                    
+
         Sprite newSprite = Sprite.Create(attributeTexture, new Rect(0, 0, textureWidth, textureHeight), Vector2.zero);
 
         img.sprite = newSprite;
     }
     private IEnumerator WaitForUpdate(string fieldName, Image img)
     {
-    var openFileDialogPrefab = Resources.Load<GameObject>("Prefabs/OpenFileDialog");
-    var rootCanvas = FindObjectOfType<Canvas>();
-    var openFileDialog = Instantiate(openFileDialogPrefab, rootCanvas.transform);
-    var ofdScript = openFileDialog.GetComponent<OpenFileDialog_Script>();
-    ofdScript.setFileFilter("mat");
-    while (ofdScript.getUserChoiceStatus())
-    {
-        yield return null;
+        var openFileDialogPrefab = Resources.Load<GameObject>("Prefabs/OpenFileDialog");
+        var rootCanvas = FindObjectOfType<Canvas>();
+        var openFileDialog = Instantiate(openFileDialogPrefab, rootCanvas.transform);
+        var ofdScript = openFileDialog.GetComponent<OpenFileDialog_Script>();
+        string path = ofdScript.correctPath(Path.Combine(Application.dataPath, "Resources/Materials"));
+        ofdScript.setFileFilter("mat");
+        ofdScript.setDirLock(path);
+        ofdScript.updateDirPath(path);
+        while (ofdScript.getUserChoiceStatus())
+        {
+            yield return null;
+        }
+        selectedFile = ofdScript.getPathOfSelectedFile();
+        ofdScript.exit();
+        if (selectedFile != null)
+        {
+            string absolutePath = ofdScript.getPathFromRessources(selectedFile);
+            var resourcesPath = Path.ChangeExtension(absolutePath, null);
+            var m = Resources.Load<Material>(resourcesPath);
+            Debug.LogWarning(m);
+            setObjectAttributeValue(fieldName, m);
+            UpdateSprite(m, img);
+            callFunction();
+        }
+        
     }
-    selectedFile = ofdScript.getPathOfSelectedFile();
-    if (selectedFile != null)
-    {
-        string path = Path.Combine(Application.dataPath, "Resources");
-            string absolutePathLol = selectedFile.Substring(path.Length + 1);
-            Debug.Log(absolutePathLol);
-            var resourcesPath = Path.ChangeExtension(absolutePathLol, null);
-/*            var resourcesPath = absolutePathLol;*/
-        var m = Resources.Load<Material>(resourcesPath);
-        Debug.LogWarning(m);
-        setObjectAttributeValue(fieldName, m);
-        UpdateSprite(m, img);
-        callFunction();
-    }
-}
 
                 /*if (fieldTypes[i] == typeof(Material))
                 {
@@ -381,15 +381,13 @@ public class AttributPanelScript : MonoBehaviour
     }
 
     // Update is called once per frame
-    void Update()
-    {
-        
-    }
+
 
     void fillCompatibleTypes()
     {
+        this.compatibleTypes = new HashSet<Type>();
         Type[] types = {
-                typeof(int), typeof(double),typeof(float), // Types num�riques
+                typeof(int), typeof(double),typeof(float), // Types numeriques
                 typeof(Vector2), typeof(Vector3), //Types vecteurs
                 typeof(char), typeof(string), //Types texte
                 typeof(Material) //Type pas comme les autres 
@@ -399,5 +397,15 @@ public class AttributPanelScript : MonoBehaviour
         {
             compatibleTypes.Add(type);
         }
+    }
+
+    private void setCorrectAndIncorrectDecimalSeparators()
+    {
+        Char[] buffer = CultureInfo.CurrentCulture.NumberFormat.NumberDecimalSeparator.ToCharArray();
+        correctNumberDecimalSeparator = buffer[0];
+        incorrectNumberDecimalSeparator =
+            correctNumberDecimalSeparator == ',' ?
+                '.' :
+                ',';
     }
 }

@@ -4,17 +4,21 @@ using UnityEngine;
 
 public class ViewPanel_Script : MonoBehaviour
 {
-    // Start is called before the first frame update
+
     private int nbElementsInPanel;
     private VerticalScrollBar_Script scrollbarScript;
-    void Start()
+    private RectTransform rectTransform;
+
+    private void Awake()
     {
-        Debug.Log("View panel has " + nbElementsInPanel + " elements in panel");
+        rectTransform = gameObject.GetComponent<RectTransform>();
         scrollbarScript = transform.parent.GetComponentInChildren<VerticalScrollBar_Script>();
         transmitNbElementsToScrollbar();
     }
+    void Start()
+    {
+    }
 
-    // Update is called once per frame
     void Update()
     {
         
@@ -27,7 +31,6 @@ public class ViewPanel_Script : MonoBehaviour
 
     public void transmitNbElementsToScrollbar()
     {
-        Debug.Log("Script named : " + scrollbarScript.name);
         scrollbarScript.setNbElementsInTargetPanel(nbElementsInPanel);
     }
 
@@ -39,6 +42,14 @@ public class ViewPanel_Script : MonoBehaviour
 
     public void resetPanelView()
     {
-        scrollbarScript.resetPanelView();
+        rectTransform.anchoredPosition = Vector3.zero;
+        scrollbarScript.resetScrollbar();
+
+        foreach(Transform child in transform)
+        {
+            Destroy(child.gameObject);
+        }
+
+        updateScrollbar();
     }
 }
