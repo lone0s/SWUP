@@ -7,7 +7,6 @@ using System.IO;
 using Newtonsoft.Json;
 using Assets.DataClasses;
 using Object = UnityEngine.Object;
-using Unity.VisualScripting;
 
 namespace Assets.Scripts
 {
@@ -72,8 +71,7 @@ namespace Assets.Scripts
                 scriptObj.planet = p;
                 return p;
             });
-            _addScript.setOnCLick(OnClickOnglet);
-            });
+            _addScript.setFunOnCLick(OnClickOnglet);
             
             _addScript.setFunOnClickDelete(gObj =>
             {
@@ -186,13 +184,13 @@ namespace Assets.Scripts
             pScript.function = arg =>
             {
                 _addScript.UpdateOnglets();
-                _addScript.UpdateOnglets();
                 return null;
             };
             pScript.initPanel(obj);
         }
 
-        private void AddPlanet(Planet p, GameObject parent)
+        private void AddPlanet(Planet p, GameObject parent) 
+        { 
             p.InitMaterial();
             p.InitMaterial();
             var gObj = GameObject.CreatePrimitive(PrimitiveType.Sphere);

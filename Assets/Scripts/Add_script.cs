@@ -37,7 +37,7 @@ public class Add_script : MonoBehaviour
         select_script = select_btn.GetComponent<SelectPrefab_script>();
     }
 
-    public void setOnCLick(Action<GameObject> f)
+    public void setFunOnCLick(Action<GameObject> f)
     {
         _functionOnClick = f;
         addPrefab_script.setFunctionOnClick(_functionOnClick);
