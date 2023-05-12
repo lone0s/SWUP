@@ -13,6 +13,7 @@ public class Onglet_script : MonoBehaviour
     private GameObject objet;
     private Camera_script camScript;
     private AttributPanelScript attribut_script;
+    public Func<GameObject, int> OnClickOnglet;
 
     // Start is called before the first frame update
     void Start()
@@ -23,16 +24,10 @@ public class Onglet_script : MonoBehaviour
         attribut_script = GameObject.Find("Attribut_panel").GetComponent<AttributPanelScript>();
 
         // Ajouter la m�thode onClick au bouton
-        mainButton.onClick.AddListener(MyOnClickMethod);
+        mainButton.onClick.AddListener(()=>{ OnClickOnglet.Invoke(objet); });
 
         deleteButton = this.transform.Find("Close_btn").GetComponent<Button>();
         deleteButton.onClick.AddListener(() => { if (objet) camScript.Reset();  Destroy(objet); Destroy(gameObject); attribut_script.resetPanel(); });
-    }
-
-    private void MyOnClickMethod()
-    {
-        camScript.MoveToTarget(objet);
-        attribut_script.initPanel(objet.GetComponent<Planet_script>().planet);
     }
 
     // Update is called once per frame

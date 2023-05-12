@@ -121,6 +121,24 @@ namespace Assets.Scripts
             pScript.initPanel(obj);
         }
 
+        private void OnClickOnglet(GameObject obj)
+        {
+            if (obj != null)
+            {
+                var camScript = Cam.GetComponent<Camera_script>();
+                camScript.MoveToTarget(obj);
+            }
+
+            var pScript = GetComponentInChildren<AttributPanelScript>();
+            pScript.function = arg =>
+            {
+                RenderPlanet(arg);
+                InitMenus();
+                return null;
+            };
+            pScript.initPanel(obj);
+        }
+
         private void AddPlanet(Planet p, GameObject parent)
         {
             
