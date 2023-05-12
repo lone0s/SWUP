@@ -60,6 +60,8 @@ namespace Assets.Scripts
             script.setFuncObj(gObj =>
             {
                 var p = new Planet();
+                gObj.name = p.name;
+                RenderPlanet(p);
                 _newObjects.Add(p.name, p);
                 gObj.AddComponent<Planet_script>();
                 gObj.GetComponent<Renderer>().material = p.material;
@@ -88,21 +90,28 @@ namespace Assets.Scripts
 
             if (p.name != p.GetOldName())
             {
-                if (_objects.ContainsKey(p.name))
+                if (_objects.ContainsKey(p.name) || _newObjects.ContainsKey(p.name))
                 {
                     p.name = p.GetOldName();
                     Debug.LogWarning("Name already exist => name is not updated");
-                }
-
-                {
+                }else {
                     GameObject.Find(p.GetOldName()).name = p.name;
-                    _objects.Remove(p.GetOldName());
-                    _objects.Add(p.name, p);
+                    if (_objects.ContainsKey(p.GetOldName()))
+                    {
+                        _objects.Remove(p.GetOldName());
+                        _objects.Add(p.name, p);
+                    }else if (_newObjects.ContainsKey(p.GetOldName()))
+                    {
+                        _newObjects.Remove(p.GetOldName());
+                        _newObjects.Add(p.name, p);
+                    }
+                    
                     p.UpdateOldName();
                 }
             }
             
             var gObj = GameObject.Find(p.name);
+            if(gObj == null) Debug.LogError(p.name + " - " + p.GetOldName());
             
             gObj.transform.position = p.position;
             gObj.transform.localScale = new Vector3(p.radius, p.radius, p.radius);
@@ -138,6 +147,7 @@ namespace Assets.Scripts
         private void OnClickOnglet(GameObject gObj)
         {
             var obj = FindObject(gObj.name, _newObjects);
+            
             if (gObj != null)
             {
                 var camScript = Cam.GetComponent<Camera_script>();

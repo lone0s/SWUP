@@ -72,10 +72,11 @@ public class Add_script : MonoBehaviour
         {
             newObjet = GameObject.CreatePrimitive(PrimitiveType.Sphere);
         }
-
+        
         var uObj = _functionUObj != null ? _functionUObj.Invoke(newObjet) : new UsableObject();
 
-        newObjet.name = uObj.name;
+        //newObjet.name = uObj.name;
+        
         
         addPrefab_script.AddPrefab(uObj, newObjet);
     }
