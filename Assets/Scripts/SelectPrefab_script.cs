@@ -5,6 +5,7 @@ public class SelectPrefab_script : MonoBehaviour
 {
     private GameObject openFileDialogPrefab;
     private OpenFileDialog_Script openfile_script;
+
     private Button button;
     private string selectedFile;
     private Transform CanvasTransform;

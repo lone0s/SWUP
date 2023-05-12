@@ -1,12 +1,9 @@
 using System;
-using System.Collections;
-using System.Collections.Generic;
 using UnityEngine;
 using UnityEngine.UI;
 
 public class ConfigCam_script : MonoBehaviour
 {
-    private Camera cam;
     private Camera_script cam_script;
     public Slider speedSlider;
     private Button reset;
@@ -16,8 +13,8 @@ public class ConfigCam_script : MonoBehaviour
     // Start is called before the first frame update
     void Start()
     {
-        cam = Camera.main;
-        cam_script = cam.GetComponentInChildren<Camera_script>();
+        cam_script = Camera.main.GetComponentInChildren<Camera_script>();
+
         speedSlider.onValueChanged.AddListener((float value) => {
             cam_script.SetTransition(value); 
         });
@@ -26,7 +23,7 @@ public class ConfigCam_script : MonoBehaviour
         reset.onClick.AddListener(() => { cam_script.Reset(); function_reset.Invoke();});
     }
 
-    public void setResetFun(Action f)
+    public void SetResetFun(Action f)
     {
         function_reset = f;
     }
