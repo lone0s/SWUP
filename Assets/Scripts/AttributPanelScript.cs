@@ -298,7 +298,11 @@ public class AttributPanelScript : MonoBehaviour
     selectedFile = ofdScript.getPathOfSelectedFile();
     if (selectedFile != null)
     {
-        var resourcesPath = Path.ChangeExtension(selectedFile.Split("Resources/")[1], null);
+        string path = Path.Combine(Application.dataPath, "Resources");
+            string absolutePathLol = selectedFile.Substring(path.Length + 1);
+            Debug.Log(absolutePathLol);
+            var resourcesPath = Path.ChangeExtension(absolutePathLol, null);
+/*            var resourcesPath = absolutePathLol;*/
         var m = Resources.Load<Material>(resourcesPath);
         Debug.LogWarning(m);
         setObjectAttributeValue(fieldName, m);
