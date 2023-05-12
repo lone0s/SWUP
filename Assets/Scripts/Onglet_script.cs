@@ -37,6 +37,11 @@ public class Onglet_script : MonoBehaviour
         onClickOnglet = f;
     }
 
+    public void UpdateTextOnglet()
+    {
+        gameObject.GetComponentInChildren<Text>().text = objet.name;
+    }
+
     public void SetOnClickDelete(Action<GameObject> f)
     {
         onClickDelete = f;
