@@ -1,33 +1,35 @@
 using System;
-using System.Collections;
-using System.Collections.Generic;
 using Assets.DataClasses;
-using Unity.VisualScripting;
 using UnityEngine;
 using UnityEngine.UI;
 
 public class AddPrefab_script : MonoBehaviour
 {
     private GameObject onglet;
-    private Camera cam;
-    private Camera_script camScript;
 
-    public Func<GameObject, int> FunctionOnClick;
-    public Action<GameObject> FunctionOnClickDelete;
+    private Action<GameObject> FunctionOnClick;
+    private Action<GameObject> FunctionOnClickDelete;
     // Start is called before the first frame update
     void Start()
     {
         onglet = Resources.Load<GameObject>("Prefabs/Onglet");
         if (onglet == null)
             Debug.LogError("Impossible de charger l'onglet depuis les ressources : Prefabs/Onglet");
-        
-        cam = Camera.main;
-        camScript = cam.GetComponent<Camera_script>();
     }
 
     // Update is called once per frame
     void Update()
     {
+    }
+
+    public void setFunctionOnClick(Action<GameObject> f)
+    {
+        FunctionOnClick = f;    
+    }
+
+    public void setFunctionOnClickDelete(Action<GameObject> f)
+    {
+        FunctionOnClickDelete = f;
     }
 
     public void AddPrefab(UsableObject uObj, GameObject objet){
@@ -37,10 +39,9 @@ public class AddPrefab_script : MonoBehaviour
 
         // On rattache la planet crée au script du prefab
         Onglet_script ongletScript = newOnglet.GetComponent<Onglet_script>();
-        ongletScript.OnClickOnglet = FunctionOnClick;
-        ongletScript.OnClickDelete = FunctionOnClickDelete;
+        ongletScript.SetOnClickOnglet(FunctionOnClick);
+        ongletScript.SetOnClickDelete(FunctionOnClickDelete);
         ongletScript.SetObjet(objet);
-        ongletScript.SetCamScript(camScript);
 
         // Met à jour le texte du bouton
         Text buttonText = newOnglet.GetComponentInChildren<Text>();

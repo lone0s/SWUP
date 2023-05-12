@@ -7,6 +7,7 @@ using System.IO;
 using Newtonsoft.Json;
 using Assets.DataClasses;
 using Object = UnityEngine.Object;
+using Unity.VisualScripting;
 
 namespace Assets.Scripts
 {
@@ -73,13 +74,18 @@ namespace Assets.Scripts
             script.setOnCLick(gObj =>
             {
                 OnClickOnglet(gObj);
-                return 0;
             });
             
             script.setFunOnClickDelete(gObj =>
             {
                 if(gObj != null && _newObjects.ContainsKey(gObj.name))
                     _newObjects.Remove(gObj.name);
+
+                Camera_script camera_Script = Camera.main.GetComponent<Camera_script>();
+                if (gObj) camera_Script.Reset();
+
+                AttributPanelScript attribut_script = GameObject.Find("Attribut_panel").GetComponent<AttributPanelScript>();
+                attribut_script.resetPanel();
             });
         }
 

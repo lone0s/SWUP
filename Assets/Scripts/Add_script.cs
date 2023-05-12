@@ -1,6 +1,4 @@
 using System;
-using System.Collections;
-using System.Collections.Generic;
 using Assets.DataClasses;
 using Unity.VisualScripting;
 using UnityEditor;
@@ -17,7 +15,7 @@ public class Add_script : MonoBehaviour
 
     public MonoScript script_objet = null;
     private Func<GameObject,UsableObject> _functionUObj;
-    private Func<GameObject, int> _functionOnClick;
+    private Action<GameObject> _functionOnClick;
     private Action<GameObject> _functionOnClickDelete;
 
     // Start is called before the first frame update
@@ -36,10 +34,10 @@ public class Add_script : MonoBehaviour
         select_script = select_btn.GetComponent<SelectPrefab_script>();
     }
 
-    public void setOnCLick(Func<GameObject, int> f)
+    public void setOnCLick(Action<GameObject> f)
     {
         _functionOnClick = f;
-        addPrefab_script.FunctionOnClick = _functionOnClick;
+        addPrefab_script.setFunctionOnClick(_functionOnClick);
     }
     
     public void setFuncObj(Func<GameObject,UsableObject> f)
@@ -50,7 +48,7 @@ public class Add_script : MonoBehaviour
     public void setFunOnClickDelete(Action<GameObject> f)
     {
         _functionOnClickDelete = f;
-        addPrefab_script.FunctionOnClickDelete = _functionOnClickDelete;
+        addPrefab_script.setFunctionOnClickDelete(_functionOnClickDelete);
     }
     
     
@@ -74,9 +72,6 @@ public class Add_script : MonoBehaviour
         }
         
         var uObj = _functionUObj != null ? _functionUObj.Invoke(newObjet) : new UsableObject();
-
-        //newObjet.name = uObj.name;
-        
         
         addPrefab_script.AddPrefab(uObj, newObjet);
     }
