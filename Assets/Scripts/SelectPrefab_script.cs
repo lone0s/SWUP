@@ -5,16 +5,13 @@ public class SelectPrefab_script : MonoBehaviour
 {
     private GameObject openFileDialogPrefab;
     private OpenFileDialog_Script openfile_script;
-    public GameObject select_panel;
     private Button button;
     private string selectedFile;
-    public Image[] panels;
-    private Transform MainPanelTransform;
+    private Transform CanvasTransform;
 
     private void Start()
     {
-        MainPanelTransform = GameObject.Find("Main_panel").transform;
-        loadImageComponentOfPanels();
+        CanvasTransform = FindObjectOfType<Canvas>().transform;
         button = GetComponent<Button>();
         button.onClick.AddListener(() =>
         {
@@ -27,30 +24,11 @@ public class SelectPrefab_script : MonoBehaviour
         
     }
 
-    void loadImageComponentOfPanels()
-    {
-        panels = new Image[]
-        {
-            GameObject.Find("Menus_panel").GetComponent<Image>(),
-            GameObject.Find("Config_panel").GetComponent<Image>(),
-            GameObject.Find("Create_panel").GetComponent<Image>() 
-        };
-    }
-
     void insufflateOpenFileDialogPrefab()
     {
         openFileDialogPrefab = Resources.Load<GameObject>("Prefabs/OpenFileDialog");
-        GameObject openFileDialog = Instantiate(openFileDialogPrefab, MainPanelTransform);
+        GameObject openFileDialog = Instantiate(openFileDialogPrefab, CanvasTransform);
         openfile_script = openFileDialog.GetComponent<OpenFileDialog_Script>();
-    }
-
-    //Useless, not used anymore
-    void switchImageStateOfPanels()
-    {
-        foreach (Image panel in panels)
-        {
-            panel.enabled = !panel.IsActive();
-        }
     }
 
     private System.Collections.IEnumerator WaitForFalse()

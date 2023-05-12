@@ -1,3 +1,4 @@
+using System;
 using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
@@ -9,7 +10,8 @@ public class ConfigCam_script : MonoBehaviour
     private Camera_script cam_script;
     public Slider speedSlider;
     private Button reset;
-    private AttributPanelScript attribut_script;
+    
+    private Action function_reset;
 
     // Start is called before the first frame update
     void Start()
@@ -21,8 +23,12 @@ public class ConfigCam_script : MonoBehaviour
         });
 
         reset = transform.Find("Reset_btn").GetComponent<Button>();
-        attribut_script = GameObject.Find("Attribut_panel").GetComponent<AttributPanelScript>();
-        reset.onClick.AddListener(() => { cam_script.Reset(); attribut_script.resetPanel(); });
+        reset.onClick.AddListener(() => { cam_script.Reset(); function_reset.Invoke();});
+    }
+
+    public void setResetFun(Action f)
+    {
+        function_reset = f;
     }
 
     // Update is called once per frame
