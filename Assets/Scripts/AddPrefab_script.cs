@@ -8,7 +8,7 @@ using UnityEngine.UI;
 
 public class AddPrefab_script : MonoBehaviour
 {
-    private GameObject prefab;
+    private GameObject onglet;
     private Camera cam;
     private Camera_script camScript;
 
@@ -17,9 +17,9 @@ public class AddPrefab_script : MonoBehaviour
     // Start is called before the first frame update
     void Start()
     {
-        prefab = Resources.Load<GameObject>("Prefabs/Onglet");
-        if (prefab == null)
-            Debug.LogError("Impossible de charger le prefab depuis les ressources : Prefabs/Onglet");
+        onglet = Resources.Load<GameObject>("Prefabs/Onglet");
+        if (onglet == null)
+            Debug.LogError("Impossible de charger l'onglet depuis les ressources : Prefabs/Onglet");
         
         cam = Camera.main;
         camScript = cam.GetComponent<Camera_script>();
@@ -28,13 +28,12 @@ public class AddPrefab_script : MonoBehaviour
     // Update is called once per frame
     void Update()
     {
-        
     }
 
     public void AddPrefab(UsableObject uObj, GameObject objet){
        
         // Instancie le prefab à la position de l'objet courant
-        GameObject newOnglet = Instantiate(prefab, transform.position, Quaternion.identity);
+        GameObject newOnglet = Instantiate(onglet, transform.position, Quaternion.identity);
 
         // On rattache la planet crée au script du prefab
         Onglet_script ongletScript = newOnglet.GetComponent<Onglet_script>();

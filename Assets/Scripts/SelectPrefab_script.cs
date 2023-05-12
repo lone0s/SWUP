@@ -6,8 +6,9 @@ public class SelectPrefab_script : MonoBehaviour
     private GameObject openFileDialogPrefab;
     private OpenFileDialog_Script openfile_script;
     private Button button;
-    private string selectedFile;
+    private string selectedFile = "";
     private Transform CanvasTransform;
+    public GameObject obj;
 
     private void Start()
     {
@@ -19,6 +20,7 @@ public class SelectPrefab_script : MonoBehaviour
             StartCoroutine(WaitForFalse());
         });
     }
+
     private void Update()
     {
         
@@ -44,5 +46,10 @@ public class SelectPrefab_script : MonoBehaviour
     public string GetSelectedFile()
     {
         return selectedFile;
+    }
+
+    public GameObject GetObject()
+    {
+        return obj;
     }
 }

@@ -53,7 +53,7 @@ public class Camera_script : MonoBehaviour
         objet_followed = null;
     }
 
-    public void SetObjetFollowed(GameObject objet)
+    private void SetObjetFollowed(GameObject objet)
     {
         objet_followed = objet.GetComponent<Planet_script>();
     }
