@@ -183,6 +183,8 @@ namespace Assets.Scripts
             var pScript = GetComponentInChildren<AttributPanelScript>();
             pScript.function = arg =>
             {
+                RenderPlanet(arg);
+                pScript.initPanel(obj);
                 _addScript.UpdateOnglets();
                 return null;
             };
@@ -191,7 +193,6 @@ namespace Assets.Scripts
 
         private void AddPlanet(Planet p, GameObject parent) 
         { 
-            p.InitMaterial();
             p.InitMaterial();
             var gObj = GameObject.CreatePrimitive(PrimitiveType.Sphere);
             gObj.name = p.name;
@@ -258,6 +259,7 @@ namespace Assets.Scripts
                 var p = (Planet)obj.Value;
                 data[idx] = p;
                 p.UpdateMaterialPath();
+                idx++;
             }
             
 
