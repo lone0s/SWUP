@@ -53,7 +53,7 @@ public class Camera_script : MonoBehaviour
         objet_followed = null;
     }
 
-    public void setObjetFollowed(GameObject objet)
+    public void SetObjetFollowed(GameObject objet)
     {
         objet_followed = objet.GetComponent<Planet_script>();
     }
@@ -70,7 +70,7 @@ public class Camera_script : MonoBehaviour
 
     public void MoveToTarget(GameObject objet)
     {
-        setObjetFollowed(objet);
+        SetObjetFollowed(objet);
 
         switch (move)
         {
