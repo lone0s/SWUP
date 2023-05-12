@@ -67,20 +67,6 @@ namespace Assets.Scripts
                 var button = dropdown.GetComponent<Image>().GetComponentInChildren<Button>();
                 clickable.Add(o.name, button);
 
-                /*var a = dropdown.transform.Find("Template").gameObject;
-                Debug.LogWarning(a);
-                var b = dropdown.transform.Find("Template/Viewport").gameObject;
-                Debug.LogWarning(b);
-                var c = dropdown.transform.Find("Template/Viewport/Content").gameObject;
-                Debug.LogWarning(c);
-                var d = dropdown.transform.Find("Template/Viewport/Content/Item").gameObject;
-                Debug.LogWarning(d);
-                var e = dropdown.transform.Find("Template/Viewport/Content/Item/Item Label").gameObject;
-                Debug.LogWarning(e);*/
-
-                /*var script = dropdown.transform.Find("Template/Viewport/Content/Item/Item label")?.gameObject.GetComponent<DropdownMenuScript>();
-                script.function = Function;*/
-
                 dropdown.GetComponentInChildren<Text>().text = o.name;
                 dropdown.transform.SetParent(transform, false);
 

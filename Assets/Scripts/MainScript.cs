@@ -1,3 +1,4 @@
+using System;
 using System.Collections.Generic;
 using UnityEditor;
 using UnityEngine;
@@ -5,7 +6,6 @@ using System.IO;
 
 using Newtonsoft.Json;
 using Assets.DataClasses;
-using Unity.VisualScripting;
 using Object = UnityEngine.Object;
 
 namespace Assets.Scripts
@@ -111,7 +111,12 @@ namespace Assets.Scripts
             }
             
             var gObj = GameObject.Find(p.name);
-            if(gObj == null) Debug.LogError(p.name + " - " + p.GetOldName());
+
+            if (gObj == null)
+            {
+                Debug.LogWarning("NImpossible to render => GameObject not found");
+                return;
+            }
             
             gObj.transform.position = p.position;
             gObj.transform.localScale = new Vector3(p.radius, p.radius, p.radius);
@@ -262,7 +267,7 @@ namespace Assets.Scripts
         
         private void OnDestroy()
         {
-            // SaveObjectsInJson("save.json");
+            //SaveObjectsInJson("/Assets/Resources/Saves/save_" + Guid.NewGuid() + ".json") ;
         }
     }
     
