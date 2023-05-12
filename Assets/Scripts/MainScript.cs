@@ -268,7 +268,11 @@ namespace Assets.Scripts
                 Converters = { new Vector3Converter() }
             };
 
-            var json = JsonConvert.SerializeObject(data, Formatting.Indented, settings);
+            SolarSystem solarSystem = new()
+            {
+                planets = data
+            };
+            var json = JsonConvert.SerializeObject(solarSystem, Formatting.Indented, settings);
             File.WriteAllText(path, json);
         }
 
