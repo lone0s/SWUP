@@ -33,6 +33,7 @@ namespace Assets.Scripts
 
             InitMenus();
             InitAddPanel();
+            InitCamPanel();
         }
 
         private void Update()
@@ -81,6 +82,17 @@ namespace Assets.Scripts
                     _newObjects.Remove(gObj.name);
             });
         }
+
+        private void InitCamPanel()
+        {
+            var script = gameObject.GetComponentInChildren<ConfigCam_script>();
+            script.setResetFun(() => {
+                AttributPanelScript attribut_script;
+                attribut_script = GameObject.Find("Attribut_panel").GetComponent<AttributPanelScript>();
+                attribut_script.resetPanel();
+            });
+        }
+
 
         private void RenderPlanet(object obj)
         {
