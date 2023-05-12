@@ -12,9 +12,9 @@ public class Add_script : MonoBehaviour
     private AddPrefab_script addPrefab_script;
     private SelectPrefab_script select_script;
     private Button addButton;
-    private string objet_path = "";
+    private string object_path = "";
 
-    public MonoScript script_objet = null;
+    public MonoScript object_script = null;
     private Func<GameObject,UsableObject> _functionUObj;
     private Action<GameObject> _functionOnClick;
     private Action<GameObject> _functionOnClickDelete;
@@ -62,29 +62,30 @@ public class Add_script : MonoBehaviour
     }
 
     private void CreateObject(){
-        objet_path = select_script.GetSelectedFile();
+        object_path = select_script.GetSelectedFile();
 
-        GameObject newObjet;
-        if (!objet_path.IsUnityNull())
+        GameObject newObject;
+        if (!object_path.IsUnityNull())
         {
-            newObjet = Instantiate(PrefabUtility.LoadPrefabContents(objet_path));
+            newObject = Instantiate(PrefabUtility.LoadPrefabContents(object_path));
         }
         else
         {
-            newObjet = GameObject.CreatePrimitive(PrimitiveType.Sphere);
+            newObject = GameObject.CreatePrimitive(PrimitiveType.Sphere);
         }
         
-        var uObj = _functionUObj != null ? _functionUObj.Invoke(newObjet) : new UsableObject();
+        var uObj = _functionUObj != null ? _functionUObj.Invoke(newObject) : new UsableObject();
 
 
-        _onglets.Add(addPrefab_script.AddPrefab(uObj, newObjet));
+        _onglets.Add(addPrefab_script.AddPrefab(uObj, newObject));
     }
 
     public void UpdateOnglets()
     {
         foreach (var onglet in _onglets)
         {
-            onglet.UpdateTextOnglet();
+            if(!onglet.IsUnityNull())
+                onglet.UpdateTextOnglet();
         }
     }
 }

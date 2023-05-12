@@ -1,16 +1,12 @@
-using Assets.DataClasses;
 using System.Collections;
-using System.Collections.Generic;
-using Unity.VisualScripting;
 using UnityEngine;
-using static UnityEngine.GraphicsBuffer;
 
 public class Camera_script : MonoBehaviour
 {
     private float transition = 5.0f;  // la durée de la transition en secondes
     private bool isMove = false;
     private Vector3 initPos;
-    private Planet_script objet_followed;
+    private Planet_script object_followed;
     private int move;
     private float distance = -2.5f;
 
@@ -34,11 +30,11 @@ public class Camera_script : MonoBehaviour
 
     private Vector3 GetPosCam()
     {
-        if (objet_followed != null)
+        if (object_followed != null)
         {
-            float size = objet_followed.transform.localScale.x;
-            Vector3 posCam = objet_followed.transform.position;
-            posCam.z = objet_followed.transform.position.z + (distance * size) * 2;
+            float size = object_followed.transform.localScale.x;
+            Vector3 posCam = object_followed.transform.position;
+            posCam.z = object_followed.transform.position.z + (distance * size) * 2;
             return posCam;
         }
         else
@@ -50,12 +46,12 @@ public class Camera_script : MonoBehaviour
     public void Reset()
     {
         isMove = false; // je dis d'arrêter le mouvement
-        objet_followed = null;
+        object_followed = null;
     }
 
-    private void SetObjetFollowed(GameObject objet)
+    private void SetObjectFollowed(GameObject obj)
     {
-        objet_followed = objet.GetComponent<Planet_script>();
+        object_followed = obj.GetComponent<Planet_script>();
     }
 
     public void SetTransition(float newTime)
@@ -68,14 +64,19 @@ public class Camera_script : MonoBehaviour
         this.move = value;
     }
 
-    public void MoveToTarget(GameObject objet)
+    public void SetDistance(float distance)
     {
-        SetObjetFollowed(objet);
+        this.distance = distance;
+    }
+
+    public void MoveToTarget(GameObject obj)
+    {
+        SetObjectFollowed(obj);
 
         switch (move)
         {
             case 0:
-                StartCoroutine(MoveToTargetCoroutine());
+                StartCoroutine(LinearMoveToTargetCoroutine());
                 break;
             case 1:
                 StartCoroutine(ZoomMoveToTargetCoroutine());
@@ -85,7 +86,7 @@ public class Camera_script : MonoBehaviour
         }        
     }
 
-    private IEnumerator MoveToTargetCoroutine()
+    private IEnumerator LinearMoveToTargetCoroutine()
     {
         if (isMove)// si la fonction est déjà appelé
         {

@@ -39,10 +39,10 @@ public class AddPrefab_script : MonoBehaviour
         GameObject newOnglet = Instantiate(onglet, transform.position, Quaternion.identity);
 
         // On rattache la planet crée au script du prefab
-        Onglet_script ongletScript = newOnglet.GetComponent<Onglet_script>();
-        ongletScript.SetOnClickOnglet(FunctionOnClick);
-        ongletScript.SetOnClickDelete(FunctionOnClickDelete);
-        ongletScript.SetObjet(objet);
+        Onglet_script onglet_script = newOnglet.GetComponent<Onglet_script>();
+        onglet_script.SetOnClickOnglet(FunctionOnClick);
+        onglet_script.SetOnClickDelete(FunctionOnClickDelete);
+        onglet_script.SetObject(objet);
 
         // Met à jour le texte du bouton
         buttonText = newOnglet.GetComponentInChildren<Text>();
@@ -51,6 +51,6 @@ public class AddPrefab_script : MonoBehaviour
         // Ajoute le nouvel objet à la hiérarchie en tant qu'enfant de l'objet courant
         newOnglet.transform.SetParent(transform, false);
 
-        return ongletScript;
+        return onglet_script;
     }
 }

@@ -89,7 +89,7 @@ namespace Assets.Scripts
         private void InitCamPanel()
         {
             var script = gameObject.GetComponentInChildren<ConfigCam_script>();
-            script.setResetFun(() => {
+            script.SetResetFun(() => {
                 AttributPanelScript attribut_script;
                 attribut_script = GameObject.Find("Attribut_panel").GetComponent<AttributPanelScript>();
                 attribut_script.resetPanel();

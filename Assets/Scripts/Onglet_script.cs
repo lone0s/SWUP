@@ -7,7 +7,7 @@ public class Onglet_script : MonoBehaviour
     private Button mainButton;
     private Button deleteButton;
 
-    private GameObject objet;
+    private GameObject obj;
 
     private Action<GameObject> onClickOnglet;
     private Action<GameObject> onClickDelete;
@@ -16,12 +16,12 @@ public class Onglet_script : MonoBehaviour
     void Start()
     {
         mainButton = GetComponent<Button>();
-        mainButton.onClick.AddListener(()=>{ onClickOnglet.Invoke(objet); });
+        mainButton.onClick.AddListener(()=>{ onClickOnglet.Invoke(obj); });
 
         deleteButton = this.transform.Find("Close_btn").GetComponent<Button>();
         deleteButton.onClick.AddListener(() => {
-            onClickDelete.Invoke(objet);
-            Destroy(objet);
+            onClickDelete.Invoke(obj);
+            Destroy(obj);
             Destroy(gameObject);
         });
     }
@@ -37,18 +37,18 @@ public class Onglet_script : MonoBehaviour
         onClickOnglet = f;
     }
 
-    public void UpdateTextOnglet()
-    {
-        gameObject.GetComponentInChildren<Text>().text = objet.name;
-    }
-
     public void SetOnClickDelete(Action<GameObject> f)
     {
         onClickDelete = f;
     }
 
-    internal void SetObjet(GameObject obj)
+    public void UpdateTextOnglet()
     {
-        this.objet = obj;
+        gameObject.GetComponentInChildren<Text>().text = obj.name;
+    }
+
+    internal void SetObject(GameObject obj)
+    {
+        this.obj = obj;
     }
 }
