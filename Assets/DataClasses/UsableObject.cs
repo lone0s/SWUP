@@ -1,5 +1,6 @@
 using System;
 using System.Collections.Generic;
+using Newtonsoft.Json;
 using UnityEditor;
 using UnityEngine;
 
@@ -33,38 +34,13 @@ namespace Assets.DataClasses
         public float period = 365F;
         public float rotation_days = 1;
         public Vector3 position = new (0,0,0);
-
-        // public Material material = new Material(Shader.Find("Standard"));
-        public Material material;
+        
+        // [JsonIgnore]
+        public Material material = Resources.Load<Material>("Materials/Default");
 
         public Planet()
         {
-            var myMaterial = Resources.Load<Material>("Materials/Default");
-            var newMaterial = new Material(myMaterial);
-
-            // Create a new asset file for the material
-            var path = "Assets/Resources/Out/" + name.Replace(" ", "_") + ".mat";
-            AssetDatabase.CreateAsset(newMaterial, path);
-
-            // Save changes to the asset database
-            AssetDatabase.SaveAssets();
-            AssetDatabase.Refresh();
-            
-            var newMaterialInstance = Resources.Load<Material>("Out/" + name.Replace(" ", "_"));
-            Debug.Log(newMaterialInstance);
-            // Create a new material based on the Standard shader
-
-            // Load a new texture
-
-            // Set the texture of the new material to the new texture
-                        //myMaterial.SetTexture("_MainTex", Texture2D.whiteTexture);
-
-            // Set any other properties of the new material as needed
-                        //myMaterial.color = Color.red;
-
-            // Assign the new material to a Renderer component
-            //GetComponent<Renderer>().material = myMaterial;
-            material = newMaterialInstance;
+            material.mainTexture = Texture2D.whiteTexture;
         }
     }
 

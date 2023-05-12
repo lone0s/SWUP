@@ -16,6 +16,7 @@ namespace Assets.Scripts
 
         [SerializeField] private Object jsonFile;
         private readonly Dictionary<string, UsableObject> _objects = new ();
+        private readonly Dictionary<string, UsableObject> _newObjects = new ();
 
         private void Start()
         {
@@ -43,11 +44,7 @@ namespace Assets.Scripts
         {
             var script = gameObject.GetComponentInChildren<MenusScript>();
             script.menus = _objects;
-            script.Function = arg =>
-            {
-               OnClickMenu(arg);
-               return null;
-            };
+            script.Function = OnClickMenu;
             script.InitMenusPanel();
 
             foreach (var obj in script.clickable)
@@ -60,18 +57,30 @@ namespace Assets.Scripts
         private void InitAddPanel()
         {
             var script = gameObject.GetComponentInChildren<Add_script>();
-            script.FunctionUObj = gObj =>
+            script.setFuncObj(gObj =>
             {
                 var p = new Planet();
+                _newObjects.Add(p.name, p);
                 gObj.AddComponent<Planet_script>();
                 gObj.GetComponent<Renderer>().material = p.material;
                 var scriptObj = gObj.GetComponent<Planet_script>();
                 scriptObj.planet = p;
                 return p;
-            };
+            });
+            script.setOnCLick(gObj =>
+            {
+                OnClickOnglet(gObj);
+                return 0;
+            });
+            
+            script.setFunOnClickDelete(gObj =>
+            {
+                if(gObj != null && _newObjects.ContainsKey(gObj.name))
+                    _newObjects.Remove(gObj.name);
+            });
         }
 
-        private GameObject RenderPlanet(object obj)
+        private void RenderPlanet(object obj)
         {
             var p = (Planet)obj;
 
@@ -97,8 +106,12 @@ namespace Assets.Scripts
             
             gObj.transform.position = p.position;
             gObj.transform.localScale = new Vector3(p.radius, p.radius, p.radius);
-
-            return gObj;
+            
+            var objRenderer = gObj.GetComponent<Renderer>();
+            if (objRenderer != null)
+            {
+                objRenderer.material = p.material;
+            }
         }
 
         private void OnClickMenu(string objName)
@@ -116,24 +129,26 @@ namespace Assets.Scripts
             {
                 RenderPlanet(arg);
                 InitMenus();
+                pScript.initPanel(obj);
                 return null;
             };
             pScript.initPanel(obj);
         }
 
-        private void OnClickOnglet(GameObject obj)
+        private void OnClickOnglet(GameObject gObj)
         {
-            if (obj != null)
+            var obj = FindObject(gObj.name, _newObjects);
+            if (gObj != null)
             {
                 var camScript = Cam.GetComponent<Camera_script>();
-                camScript.MoveToTarget(obj);
+                camScript.MoveToTarget(gObj);
             }
-
+            
             var pScript = GetComponentInChildren<AttributPanelScript>();
             pScript.function = arg =>
             {
                 RenderPlanet(arg);
-                InitMenus();
+                //InitMenus();
                 return null;
             };
             pScript.initPanel(obj);
@@ -163,7 +178,7 @@ namespace Assets.Scripts
                 p.material = objRenderer.material;
             }
 
-            foreach (KeyValuePair<string, UsableObject> child in p.Children)
+            foreach (var child in p.Children)
             {
                 AddPlanet((Planet)child.Value, gObj);
             }
@@ -191,13 +206,20 @@ namespace Assets.Scripts
 
         private void SaveObjectsInJson(string path)
         {
-            var data = new Planet[_objects.Count];
+            var data = new Planet[_objects.Count + _newObjects.Count];
             var idx = 0;
             foreach (var obj in _objects)
             {
                 data[idx] = (Planet)obj.Value;
                 idx++;
             }
+            
+            foreach (var obj in _newObjects)
+            {
+                data[idx] = (Planet)obj.Value;
+                idx++;
+            }
+            
 
             var settings = new JsonSerializerSettings
             {
@@ -210,9 +232,9 @@ namespace Assets.Scripts
 
         private static UsableObject FindObject(string key, Dictionary<string, UsableObject> dict)
         {
-            if (dict.ContainsKey(key))
+            if (dict.TryGetValue(key, out var o))
             {
-                return dict[key];
+                return o;
             }
             {
                 foreach (UsableObject child in dict.Values)
@@ -228,31 +250,9 @@ namespace Assets.Scripts
             }
         }
         
-        private const string Path = "Assets/Resources/Out";
-
         private void OnDestroy()
         {
-            DeleteFolderContents(Path);
-        }
-
-        private static void DeleteFolderContents(string path)
-        {
-            if (Directory.Exists(path))
-            {
-                var files = Directory.GetFiles(path);
-                var directories = Directory.GetDirectories(path);
-
-                foreach (var file in files)
-                {
-                    File.Delete(file);
-                }
-
-                foreach (var directory in directories)
-                {
-                    DeleteFolderContents(directory);
-                    Directory.Delete(directory);
-                }
-            }
+            // SaveObjectsInJson("save.json");
         }
     }
     

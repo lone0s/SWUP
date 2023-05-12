@@ -11,6 +11,9 @@ public class AddPrefab_script : MonoBehaviour
     private GameObject prefab;
     private Camera cam;
     private Camera_script camScript;
+
+    public Func<GameObject, int> FunctionOnClick;
+    public Action<GameObject> FunctionOnClickDelete;
     // Start is called before the first frame update
     void Start()
     {
@@ -34,9 +37,11 @@ public class AddPrefab_script : MonoBehaviour
         GameObject newOnglet = Instantiate(prefab, transform.position, Quaternion.identity);
 
         // On rattache la planet crée au script du prefab
-        Onglet_script OngletScript = newOnglet.GetComponent<Onglet_script>();
-        OngletScript.SetObjet(objet);
-        OngletScript.SetCamScript(camScript);
+        Onglet_script ongletScript = newOnglet.GetComponent<Onglet_script>();
+        ongletScript.OnClickOnglet = FunctionOnClick;
+        ongletScript.OnClickDelete = FunctionOnClickDelete;
+        ongletScript.SetObjet(objet);
+        ongletScript.SetCamScript(camScript);
 
         // Met à jour le texte du bouton
         Text buttonText = newOnglet.GetComponentInChildren<Text>();

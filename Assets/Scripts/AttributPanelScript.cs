@@ -2,8 +2,10 @@ using System;
 using System.Collections;
 using System.Collections.Generic;
 using System.Globalization;
+using System.IO;
 using System.Reflection;
 using Unity.VisualScripting;
+using UnityEditor;
 using UnityEngine;
 using UnityEngine.EventSystems;
 using UnityEngine.UI;
@@ -252,54 +254,43 @@ public class AttributPanelScript : MonoBehaviour
                     Image imgToShowTextureLive = objToShowTextureLive.AddComponent<Image>();
                     Material attributeMaterial = (Material)getObjectAttributeValue(fields[i].Name);
                     Debug.Log("Material Name : " + attributeMaterial.name);
-
-                    // Create a copy of the material
-                    Material newMaterial = new Material(attributeMaterial);
-                    newMaterial.name = attributeMaterial.name + " (copy)";
-
-                    Texture2D attributeTexture = (Texture2D)newMaterial.mainTexture;
-
-                    if(attributeTexture == null)
-                    {
-                        Debug.LogWarning(attributeMaterial + " - " + attributeTexture);
-                    }
-
-                    int textureWidth = attributeTexture.width;
-                    int textureHeight = attributeTexture.height;
-
-                    Sprite attributeSprite = Sprite.Create(attributeTexture, new Rect(0, 0, textureWidth, textureHeight), Vector2.zero);
-
-                    imgToShowTextureLive.sprite = attributeSprite;
+                    
+                    UpdateSprite(attributeMaterial, imgToShowTextureLive);
                     objToShowTextureLive.transform.SetParent(transform);
-                    string fieldName = fields[i].Name;
-                    EventTrigger imgTrigger = imgToShowTextureLive.AddComponent<EventTrigger>();
-                    EventTrigger.Entry imgEntry = new EventTrigger.Entry();
+                    var fieldName = fields[i].Name;
+                    var imgTrigger = imgToShowTextureLive.AddComponent<EventTrigger>();
+                    var imgEntry = new EventTrigger.Entry();
                     imgEntry.eventID = EventTriggerType.PointerClick;
-                    object[] neededParams = { attributeTexture, newMaterial, fieldName };
                     imgEntry.callback.AddListener((data) =>
                     {
-                        StartCoroutine(WaitForUpdate(neededParams));
+                        StartCoroutine(WaitForUpdate(fieldName, imgToShowTextureLive));
                     });
                     imgTrigger.triggers.Add(imgEntry);
                 }
 
-                this.attributePanelHasElements = true;
-
-                this.attributePanelHasElements = true;
+                attributePanelHasElements = true;
             }
         }
     }
 
-    private System.Collections.IEnumerator WaitForUpdate(object[] neededParams)
-{
-    Texture2D attributeTexture = (Texture2D)neededParams[0];
-    Material attributeMaterial = (Material)neededParams[1];
-    string fieldName = (string)neededParams[2];
-    GameObject OpenFileDialogPrefab = Resources.Load<GameObject>("Prefabs/OpenFileDialog");
-    Canvas rootCanvas = FindObjectOfType<Canvas>();
-    GameObject openFileDialog = Instantiate(OpenFileDialogPrefab, rootCanvas.transform);
-    OpenFileDialog_Script ofdScript = openFileDialog.GetComponent<OpenFileDialog_Script>();
-    ofdScript.setFileFilter("png");
+    private void UpdateSprite(Material m, Image img)
+    {
+        var attributeTexture = (Texture2D)m.mainTexture;
+                    
+        var textureWidth = attributeTexture.width;
+        var textureHeight = attributeTexture.height;
+                    
+        Sprite newSprite = Sprite.Create(attributeTexture, new Rect(0, 0, textureWidth, textureHeight), Vector2.zero);
+
+        img.sprite = newSprite;
+    }
+    private IEnumerator WaitForUpdate(string fieldName, Image img)
+    {
+    var openFileDialogPrefab = Resources.Load<GameObject>("Prefabs/OpenFileDialog");
+    var rootCanvas = FindObjectOfType<Canvas>();
+    var openFileDialog = Instantiate(openFileDialogPrefab, rootCanvas.transform);
+    var ofdScript = openFileDialog.GetComponent<OpenFileDialog_Script>();
+    ofdScript.setFileFilter("mat");
     while (ofdScript.getUserChoiceStatus())
     {
         yield return null;
@@ -307,12 +298,12 @@ public class AttributPanelScript : MonoBehaviour
     selectedFile = ofdScript.getPathOfSelectedFile();
     if (selectedFile != null)
     {
-        ofdScript.exit();
-        byte[] imgData = System.IO.File.ReadAllBytes(selectedFile);
-        attributeTexture.LoadImage(imgData);
-        Material newMaterial = Instantiate(attributeMaterial);
-        newMaterial.mainTexture = attributeTexture;
-        setObjectAttributeValue(fieldName, newMaterial);
+        var resourcesPath = Path.ChangeExtension(selectedFile.Split("Resources/")[1], null);
+        var m = Resources.Load<Material>(resourcesPath);
+        Debug.LogWarning(m);
+        setObjectAttributeValue(fieldName, m);
+        UpdateSprite(m, img);
+        callFunction();
     }
 }
 
