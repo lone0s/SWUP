@@ -288,7 +288,7 @@ public class AttributPanelScript : MonoBehaviour
         var openFileDialog = Instantiate(openFileDialogPrefab, rootCanvas.transform);
         var ofdScript = openFileDialog.GetComponent<OpenFileDialog_Script>();
         string path = ofdScript.correctPath(Path.Combine(Application.dataPath, "Resources/Materials"));
-        ofdScript.update(path, "mat", path);
+        ofdScript.updateOFD(path, "mat", path);
         while (ofdScript.getUserChoiceStatus())
         {
             yield return null;

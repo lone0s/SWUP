@@ -133,7 +133,7 @@ public class OpenFileDialog_Script : MonoBehaviour
         verifyCoherenceDirLockAndBaseDir();
     }
 
-    public void update(string newPath = null, string fileFilter = null, string dirLock = null)
+    public void updateOFD(string newPath = null, string fileFilter = null, string dirLock = null)
     {
         if (newPath != null && newPath != directoryPath)
         {
@@ -276,7 +276,7 @@ public class OpenFileDialog_Script : MonoBehaviour
         {
             Debug.Log("Vroom");
             triggerMetaFileFilter = newState;
-            update();
+            updateOFD();
         }
     }
 
@@ -292,14 +292,14 @@ public class OpenFileDialog_Script : MonoBehaviour
         triggerFileFilter = false;
         triggerMetaFileFilter = false;
         fileFilterFormat = null;
-        update();
+        updateOFD();
     }
 
     public void resetDirLock()
     {
         baseDirLockPath = null;
         triggerLockOnBaseDirectory = false;
-        update();
+        updateOFD();
     }
 
     public static bool isAValidSubPath(string basePath, string otherPath)
