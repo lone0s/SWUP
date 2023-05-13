@@ -34,11 +34,13 @@ public class OpenFileDialog_Script : MonoBehaviour
     private bool triggerMetaFileFilter = true;
     private bool userIsChoosingFile = true;
 
+
     private char correctDirSeparator;
     private char wrongDirSeparator;
 
     private void Awake()
     {
+
         correctDirSeparator = Path.DirectorySeparatorChar;
         wrongDirSeparator = 
             correctDirSeparator == '\\' ? 
@@ -62,11 +64,12 @@ public class OpenFileDialog_Script : MonoBehaviour
 
     void Start()
     {
+
         searchPanelSpecialActionIcon = GameObject.Find("SearchPanel/SpecialActionIcon").GetComponent<Image>();
         searchPanelSpecialActionIcon2 = GameObject.Find("SearchPanel/SpecialActionIcon2").GetComponent<Image>();
-        
+
         float width, height;
-        
+
         ImagedText_Script.getWidthHeightOfImg(searchPanelSpecialActionIcon, out width, out height);
         searchPanelSpecialActionIcon.sprite = ImagedText_Script.makeSpriteOfPngFile(goBackIcon, width, height);
         
@@ -127,20 +130,26 @@ public class OpenFileDialog_Script : MonoBehaviour
         });
 
         insufflateLines();
+        verifyCoherenceDirLockAndBaseDir();
     }
 
-    public void update(string newPath)
+    public void update(string newPath = null, string fileFilter = null, string dirLock = null)
     {
-        if (newPath != directoryPath)
+        if (newPath != null && newPath != directoryPath)
         {
             directoryPath = newPath;
-            verifyCoherenceDirLockAndBaseDir();
-            doRoutine();
         }
+        if (fileFilter != null && fileFilter != fileFilterFormat)
+            setFileFilter(fileFilter);
+        if (dirLock != null && dirLock != baseDirLockPath)
+            setDirLock(dirLock); 
+        verifyCoherenceDirLockAndBaseDir();
+        doRoutine();
     }
 
     void doRoutine()
     {
+
         updateFilesAndDirectories(directoryPath);
         resetView();
         insufflateLines();
@@ -260,9 +269,15 @@ public class OpenFileDialog_Script : MonoBehaviour
         triggerFileFilter = true;
         fileFilterFormat = fileFormat.Contains(".") ? fileFormat : "." + fileFormat;
     }
-    public void setMetaFilter()
+    public void setMetaFilter(bool newState)
     {
-        triggerMetaFileFilter = true;
+        Debug.Log(triggerMetaFileFilter + "|" + newState);
+        if (newState != triggerMetaFileFilter)
+        {
+            Debug.Log("Vroom");
+            triggerMetaFileFilter = newState;
+            update();
+        }
     }
 
     public void setDirLock(string baseDir)
@@ -272,11 +287,19 @@ public class OpenFileDialog_Script : MonoBehaviour
     }
 
     //Si jamais..
-    private void resetFilters()
+    public void resetFilters()
     {
         triggerFileFilter = false;
         triggerMetaFileFilter = false;
         fileFilterFormat = null;
+        update();
+    }
+
+    public void resetDirLock()
+    {
+        baseDirLockPath = null;
+        triggerLockOnBaseDirectory = false;
+        update();
     }
 
     public static bool isAValidSubPath(string basePath, string otherPath)
@@ -307,7 +330,6 @@ public class OpenFileDialog_Script : MonoBehaviour
 
     void resetView()
     {
-        Debug.Log(viewPanelScript.name);
         viewPanelScript.resetPanelView();
     }
 

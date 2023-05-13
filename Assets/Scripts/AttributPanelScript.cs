@@ -5,7 +5,6 @@ using System.Globalization;
 using System.IO;
 using System.Reflection;
 using Unity.VisualScripting;
-using UnityEditor;
 using UnityEngine;
 using UnityEngine.EventSystems;
 using UnityEngine.UI;
@@ -289,9 +288,7 @@ public class AttributPanelScript : MonoBehaviour
         var openFileDialog = Instantiate(openFileDialogPrefab, rootCanvas.transform);
         var ofdScript = openFileDialog.GetComponent<OpenFileDialog_Script>();
         string path = ofdScript.correctPath(Path.Combine(Application.dataPath, "Resources/Materials"));
-        ofdScript.setFileFilter("mat");
-        ofdScript.setDirLock(path);
-        ofdScript.update(path);
+        ofdScript.update(path, "mat", path);
         while (ofdScript.getUserChoiceStatus())
         {
             yield return null;
@@ -311,66 +308,6 @@ public class AttributPanelScript : MonoBehaviour
         
     }
 
-                /*if (fieldTypes[i] == typeof(Material))
-                {
-                    GameObject objToShowTextureLive = new GameObject("TextureObject");
-                    Image imgToShowTextureLive = objToShowTextureLive.AddComponent<Image>();
-                    // Material attributeMaterial = (Material)getObjectAttributeValue(fields[i].Name);
-                    Material attributeMaterial = new Material((Material)getObjectAttributeValue(fields[i].Name));
-                    Debug.Log("Material Name : " + attributeMaterial.name);
-                    Texture2D attributeTexture = (Texture2D)attributeMaterial.mainTexture;
-                    if(attributeTexture ==null) Debug.LogWarning(attributeMaterial + " - " + attributeTexture);
-                    int textureWidth = attributeTexture.width;
-                    int textureHeight = attributeTexture.height;
-                    Sprite attributeSprite = Sprite.Create(attributeTexture, new Rect(0, 0, textureWidth, textureHeight), Vector2.zero);
-                    imgToShowTextureLive.sprite = attributeSprite;
-                    objToShowTextureLive.transform.SetParent(transform);
-                    string fieldName = fields[i].Name;
-                    EventTrigger imgTrigger = imgToShowTextureLive.AddComponent<EventTrigger>();
-                    EventTrigger.Entry imgEntry = new EventTrigger.Entry();
-                    imgEntry.eventID = EventTriggerType.PointerClick;
-                    object[] neededParams = { attributeTexture, attributeMaterial, fieldName };
-                    imgEntry.callback.AddListener((data) =>
-                    {
-                        StartCoroutine(WaitForUpdate(neededParams));
-                    });
-                    imgTrigger.triggers.Add(imgEntry);
-                }
-                this.attributePanelHasElements = true;
-            }
-        }
-
-    }
-
-
-
-    private System.Collections.IEnumerator WaitForUpdate(object[] neededParams)
-    {
-        Texture2D attributeTexture = (Texture2D)neededParams[0];
-        Material attributeMaterial = (Material)neededParams[1];
-        string fieldName = (string)neededParams[2];
-        GameObject OpenFileDialogPrefab = Resources.Load<GameObject>("Prefabs/OpenFileDialog");
-        Canvas rootCanvas = FindObjectOfType<Canvas>();
-        GameObject openFileDialog = Instantiate(OpenFileDialogPrefab, rootCanvas.transform);
-        OpenFileDialog_Script ofdScript = openFileDialog.GetComponent<OpenFileDialog_Script>();
-        ofdScript.setFileFilter("png");
-        while (ofdScript.getUserChoiceStatus())
-        {
-            yield return null;
-        }
-        selectedFile = ofdScript.getPathOfSelectedFile();
-        if (selectedFile != null)
-        {
-            ofdScript.exit();
-            byte[] imgData = System.IO.File.ReadAllBytes(selectedFile);
-            attributeTexture.LoadImage(imgData);
-           // attributeMaterial.mainTexture = attributeTexture;
-           attributeMaterial.SetTexture("_MainTex", attributeTexture);
-        }
-        setObjectAttributeValue(fieldName, attributeMaterial);
-    }*/
-
-
     public void resetPanel()
     {
         foreach(Transform child in transform)
@@ -379,9 +316,6 @@ public class AttributPanelScript : MonoBehaviour
         }
             this.attributePanelHasElements = false;
     }
-
-    // Update is called once per frame
-
 
     void fillCompatibleTypes()
     {
