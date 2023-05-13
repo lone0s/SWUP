@@ -110,17 +110,17 @@ public class OpenFileDialog_Script : MonoBehaviour
 
         pathInput.onEndEdit.AddListener((text) =>
         {
+
             if (text != string.Empty)
             {
-                string newInputPath = Directory.Exists(Path.GetFullPath(text)) ?
+                string newInputPath = Directory.Exists(text) ?
                     Path.GetFullPath(text) :
                     directoryPath;
-
                 directoryPath = triggerLockOnBaseDirectory ?
                     isAValidSubPath(baseDirLockPath, newInputPath) ?
                         newInputPath :
                         baseDirLockPath :
-                    directoryPath;
+                    newInputPath;
                 doRoutine();
             }
             pathInput.text = directoryPath;
@@ -129,11 +129,12 @@ public class OpenFileDialog_Script : MonoBehaviour
         insufflateLines();
     }
 
-    public void updateDirPath(string newPath)
+    public void update(string newPath)
     {
         if (newPath != directoryPath)
         {
             directoryPath = newPath;
+            verifyCoherenceDirLockAndBaseDir();
             doRoutine();
         }
     }
@@ -209,12 +210,6 @@ public class OpenFileDialog_Script : MonoBehaviour
 
             string newPath = correctPath(Path.GetFullPath(Path.Combine(directoryPath, subdirectories[i])));
 
-            lineScript.iconPath = folderIconPath;
-            lineScript.attributeNames[0] = "Directory";
-            lineScript.name = "folder" + (i + 1);
-            lineScript.text = subdirectories[i];
-            lineScript.initialize();
-
             clickEvent.eventID = EventTriggerType.PointerClick;
             clickEvent.callback.AddListener((data) =>
             {
@@ -223,6 +218,12 @@ public class OpenFileDialog_Script : MonoBehaviour
                 doRoutine();
             });
             onClickEventTrigger.triggers.Add(clickEvent);
+
+            lineScript.iconPath = folderIconPath;
+            lineScript.attributeNames[0] = "Directory";
+            lineScript.name = "folder" + (i + 1);
+            lineScript.text = subdirectories[i];
+            lineScript.initialize();
         }
     }
 

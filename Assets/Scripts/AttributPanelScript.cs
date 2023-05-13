@@ -291,7 +291,7 @@ public class AttributPanelScript : MonoBehaviour
         string path = ofdScript.correctPath(Path.Combine(Application.dataPath, "Resources/Materials"));
         ofdScript.setFileFilter("mat");
         ofdScript.setDirLock(path);
-        ofdScript.updateDirPath(path);
+        ofdScript.update(path);
         while (ofdScript.getUserChoiceStatus())
         {
             yield return null;
