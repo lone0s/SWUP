@@ -16,14 +16,16 @@ public class Onglet_script : MonoBehaviour
     void Start()
     {
         mainButton = GetComponent<Button>();
-        mainButton.onClick.AddListener(()=>{ onClickOnglet.Invoke(obj); });
-
+        if(onClickOnglet != null) mainButton.onClick.AddListener(() => { onClickOnglet.Invoke(obj); });
+        
         deleteButton = this.transform.Find("Close_btn").GetComponent<Button>();
         deleteButton.onClick.AddListener(() => {
-            onClickDelete.Invoke(obj);
-            Destroy(obj);
-            Destroy(gameObject);
+            Destroy(null);
+            if(onClickDelete != null && obj != null) onClickDelete.Invoke(obj);
+            if(obj != null) Destroy(obj);
+            if(gameObject != null) Destroy(gameObject);
         });
+        
     }
 
     // Update is called once per frame

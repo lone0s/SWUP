@@ -1,5 +1,6 @@
 using System.Collections;
 using System.Collections.Generic;
+using System.IO;
 using UnityEngine;
 using UnityEngine.UI;
 
@@ -40,9 +41,18 @@ public class ImagedText_Script : MonoBehaviour
     public static Sprite makeSpriteOfPngFile(string imgPath, float width, float height)
     {
         Texture2D texture = new Texture2D((int)width, (int)height);
-        byte[] imgData = System.IO.File.ReadAllBytes(imgPath);
-        texture.LoadImage(imgData);
-        return Sprite.Create(texture, new Rect(0, 0, texture.width, texture.height), Vector2.zero);
+        if (imgPath != null && File.Exists(imgPath))
+        {
+            byte[] imgData = System.IO.File.ReadAllBytes(imgPath);
+            texture.LoadImage(imgData);
+            return Sprite.Create(texture, new Rect(0, 0, texture.width, texture.height), Vector2.zero);
+        }
+        else
+        {
+            Debug.LogWarning("Path for imaged text is missing or wrong : " + (imgPath ?? "null"));
+            return null;
+        }
+        
     }
 
     void setIconImage(Sprite icon)
