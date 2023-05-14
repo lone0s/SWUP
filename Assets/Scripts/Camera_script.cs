@@ -6,7 +6,7 @@ public class Camera_script : MonoBehaviour
     private float transition = 5.0f;  // la durée de la transition en secondes
     private bool isMove = false;
     private Vector3 initPos;
-    private Planet_script object_followed;
+    private GameObject object_followed;
     private int move;
     private float distance = -2.5f;
 
@@ -51,7 +51,7 @@ public class Camera_script : MonoBehaviour
 
     private void SetObjectFollowed(GameObject obj)
     {
-        object_followed = obj.GetComponent<Planet_script>();
+        object_followed = obj;
     }
 
     public void SetTransition(float newTime)

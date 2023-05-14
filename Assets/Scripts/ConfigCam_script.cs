@@ -20,7 +20,7 @@ public class ConfigCam_script : MonoBehaviour
         });
 
         reset = transform.Find("Reset_btn").GetComponent<Button>();
-        reset.onClick.AddListener(() => { cam_script.Reset(); function_reset.Invoke();});
+        reset.onClick.AddListener(() => { cam_script.Reset(); function_reset?.Invoke();});
     }
 
     public void SetResetFun(Action f)
