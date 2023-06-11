@@ -1,5 +1,7 @@
 # Projet_Unity
 
+Projet universitaire de création de widgets complexes, indépendants et intelligents. 
+
 #	Widget Menu : 
 
 - Ajouter le prefab “Menus_panel”
